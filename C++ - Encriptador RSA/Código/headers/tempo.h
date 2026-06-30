@@ -1,8 +1,8 @@
 /* tempo.h */
+#ifndef TEMPO_H
+#define TEMPO_H
 #include <string>
 #include <chrono>
-#ifndef TEMPO_H // Include guard
-#define TEMPO_H
 // Simplificação de nome para facilitar operações de conversão
 using MICRO = std::chrono::duration<unsigned long long int, std::micro>;
 // Struct para armazenar o tempo de uma operação ajustado para a escala

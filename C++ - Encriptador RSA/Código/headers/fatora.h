@@ -1,10 +1,10 @@
 /* fatora.h */
+#ifndef FATORA_H
+#define FATORA_H
 #include <vector>
 #include <string>
 #include "tempo.h"
 #include "primos.h"
-#ifndef FATORA_H // Include guard
-#define FATORA_H
 // Struct com o 2 valores long long int
 struct FATOR{ // Vai ser usado como {fator, multiplicidade} e {tempo, nº primos}
     unsigned long long int num1{};
