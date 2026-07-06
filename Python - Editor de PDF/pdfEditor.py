@@ -1,6 +1,7 @@
 # pdfEditor.py
-# - Desenvolvedor:
+# Desenvolvedor:
 #     Kayky Moreira Praxedes
+
 import os
 import re
 import shlex

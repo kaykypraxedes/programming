@@ -3,6 +3,7 @@
 Desenvolvedor:
     Kayky Moreira Praxedes
 */
+
 #include <iostream>
 #include "headers/fatora.h"
 #include "headers/primos.h"
@@ -63,7 +64,9 @@ int main(){
     // Menu
     short int opcao{};
     while(true){
-        std::cout << "\n~~~~~~~~~~~~~~~~~~~ Menu principal ~~~~~~~~~~~~~~~~~~~~\n\n";
+        std::cout << "=======================================================\n";
+        std::cout << "                    Menu principal                     \n";
+        std::cout << "=======================================================\n\n";
         std::cout << "1) Fatorar um número\n2) Calcular o menor primo com n dígitos\n3) Codificar e decodificar uma mensagem usando RSA\n0) Encerrar\nOpção: ";
         std::cin >> opcao;
         switch (opcao){

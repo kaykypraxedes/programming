@@ -2,11 +2,17 @@
 
 Implementação educacional do algoritmo RSA em C++, com utilitários para geração de números primos e fatoração.
 
+**Desenvolvedor:** Kayky Moreira Praxedes
+
+---
+
 ## Funcionalidades
 
 - **Fatoração de números** — Decompõe um valor em seus fatores primos, exibindo o tempo de processamento e a quantidade de primos calculados.
 - **Cálculo do menor primo com n dígitos** — Encontra o menor número primo com uma quantidade específica de dígitos usando a Conjectura de Legendre.
 - **Criptografia/Descriptografia RSA** — Geração de chaves (pública e privada), codificação e decodificação de mensagens.
+
+---
 
 ## Estrutura do Projeto
 
@@ -18,6 +24,8 @@ Código/
 ├── primos.cpp/.h      # Geração de primos (Crivo de Eratóstenes)
 └── tempo.cpp/.h       # Formatação de tempo (us → ms → s → min)
 ```
+
+---
 
 ## Módulos
 
@@ -43,6 +51,8 @@ Implementa o RSA com as seguintes operações:
 
 Converte microssegundos para milissegundos, segundos ou minutos + segundos para exibição amigável.
 
-## Observação sobre Segurança
+---
+
+## Segurança e Limitações
 
 O Crivo de Eratóstenes implementado neste projeto só é capaz de fatorar números cujo maior fator primo esteja dentro do limite viável de memória (~4 GB para `sqrt(2^64)`, ou 2³² bits). Para um número RSA real (tipicamente 2048 bits ou mais), a raiz quadrada já teria 1024 bits — inviabilizando completamente o crivo. Este projeto ilustra justamente que algoritmos ingênuos, mesmo otimizados, não conseguem quebrar o RSA na prática, servindo apenas como demonstração educacional do funcionamento matemático do algoritmo.

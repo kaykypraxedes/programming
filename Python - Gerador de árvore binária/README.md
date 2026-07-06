@@ -10,8 +10,7 @@ Implementação de uma **Árvore B** (B-Tree) de grau `t` em Python, com operaç
 
 Uma B-Tree é uma estrutura de dados balanceada onde cada nó pode armazenar **múltiplas chaves** e ter **múltiplos filhos**. Diferente de uma árvore binária (que tem no máximo 2 filhos por nó), a B-Tree é otimizada para sistemas que trabalham com grandes volumes de dados, como bancos de dados e sistemas de arquivos.
 
-### Propriedades fundamentais
-
+**Propriedades fundamentais:**
 - Cada nó contém entre `t - 1` e `2t - 1` chaves (exceto a raiz, que pode ter de 1 a `2t - 1`)
 - Cada nó não-folha com `n` chaves tem exatamente `n + 1` filhos
 - Todas as folhas estão na **mesma profundidade**
@@ -19,9 +18,16 @@ Uma B-Tree é uma estrutura de dados balanceada onde cada nó pode armazenar **m
 
 ---
 
-## Estrutura do código
+## Funcionalidades
 
-### Constantes globais
+- **Inserção** — Insere chaves mantendo o balanceamento da árvore, dividindo nós cheios (`split`) quando necessário.
+- **Remoção** — Remove chaves cobrindo todos os casos da literatura (folha, nó interno, empréstimo entre irmãos, fusão de nós).
+- **Busca** — Localiza uma chave percorrendo a árvore a partir da raiz.
+- **Visualização** — Exibe a árvore formatada por níveis, indicando raiz e folhas.
+
+---
+
+## Estrutura do código
 
 | Constante | Valor | Significado |
 |---|---|---|
@@ -29,113 +35,61 @@ Uma B-Tree é uma estrutura de dados balanceada onde cada nó pode armazenar **m
 | `IRMAO_DIREITO` | `0` | Indica operação com o irmão direito |
 | `MAX_DEPTH` | `100` | Limite de segurança contra recursão infinita |
 
-### Classe `bNode` (nó)
+**Classe `bNode` (nó):** `leaf` (bool, se é folha), `keys` (chaves armazenadas), `children` (referências aos filhos).
 
-Cada nó armazena:
-
-- `leaf` (`bool`) — se o nó é folha
-- `keys` (`list`) — chaves armazenadas no nó
-- `children` (`list`) — referências para os nós filhos
-
-### Classe `bTree` (árvore)
-
-A árvore em si:
-
-- `root` — referência para o nó raiz
-- `t` — grau mínimo da árvore
+**Classe `bTree` (árvore):** `root` (nó raiz), `t` (grau mínimo).
 
 ---
 
-## Funções
+## Módulos
 
 ### Inserção
 
-#### `insert(k)`
-Insere a chave `k` na árvore:
-1. Se a árvore está vazia, cria a raiz como folha e insere `k`
-2. Senão, navega até a folha apropriada (`goLeaf`)
-3. **Caso 1 — folha com espaço** (`len(keys) < 2t - 1`): insere `k` mantendo a ordem
-4. **Caso 2 — folha cheia** (`len(keys) == 2t - 1`): divide o nó (`split`) e tenta a inserção novamente
+A inserção (`insert(k)`) navega até a folha apropriada via `goLeaf`. Se a folha tem espaço (`len(keys) < 2t - 1`), insere `k` mantendo a ordem. Se está cheia, divide o nó (`split`) e tenta novamente.
 
-#### `goLeaf(node, k)`
-Navega recursivamente da `node` até a folha onde `k` deve ser inserida.
-
-#### `split(node)`
-Divide um nó cheio em dois nós irmãos, promovendo a chave mediana para o nó pai:
-1. Encontra o pai do nó
-2. Se o nó for a raiz, cria uma nova raiz
-3. Move as chaves maiores que a mediana para um novo nó
-4. Insere a mediana no pai
-5. Se o pai também estiver cheio, divide-o recursivamente
-
----
+O `split(node)` divide um nó cheio em dois irmãos, promovendo a chave mediana para o pai — criando uma nova raiz se necessário, e cascateando recursivamente se o pai também estiver cheio.
 
 ### Remoção
 
-#### `remove(k)`
-Remove a chave `k` da árvore. Abrange todos os casos da literatura:
+A remoção (`remove(k)`) cobre todos os casos clássicos:
 
-**Caso especial:** árvore com apenas a raiz — remove diretamente.
+**Remoção em folha:**
+1. **1a** — folha acima do mínimo: remove diretamente
+2. **1b** — folha no mínimo, mas um irmão tem chaves extras: empréstimo via `passKey`
+3. **1c** — folha e irmãos no mínimo: fusão via `merge`, depois tenta remover novamente
 
-**Caso 1 — remoção em folha:**
-- **1a** — folha com mais que o mínimo (`> t - 1`): remove diretamente
-- **1b** — folha no mínimo, mas um irmão tem chaves extras: pega emprestado do irmão via `passKey`, depois remove
-- **1c** — folha e irmãos no mínimo: funde nós via `merge`, depois tenta remover novamente
+**Remoção em nó interno:**
+1. **2a** — algum filho tem mais que o mínimo: substitui pela chave predecessora/sucessora
+2. **2b** — ambos os filhos no mínimo: funde os dois filhos via `merge`
 
-**Caso 2 — remoção em nó interno:**
-- **2a** — filho esquerdo ou direito tem mais que o mínimo: substitui a chave pelo predecessor ou sucessor, remove do filho
-- **2b** — ambos os filhos no mínimo: funde os dois filhos com a chave via `merge`, depois tenta remover novamente
-
-#### `findParent(current, child)`
-Busca recursivamente o nó pai de `child` a partir de `current`.
-
-#### `passKey(node, sibling, parent, index, pm)`
-Transfere uma chave do `parent` para `node`, pegando uma chave compensatória de `sibling` (empréstimo entre irmãos).
-
-#### `merge(node, sibling, parent, index, pm)`
-Funde dois nós irmãos quando ambos estão no número mínimo de chaves. Se o pai também não tiver chaves extras, a fusão pode cascatear recursivamente para cima (envolvendo o avô).
-
----
+O `merge(node, sibling, parent, index, pm)` funde dois nós irmãos quando ambos estão no mínimo de chaves; se o pai também ficar sem chaves extras, a fusão pode cascatear até o avô. `passKey` faz o inverso: transfere uma chave do pai para o nó, compensando com uma chave do irmão. `findParent` localiza o pai de um nó recursivamente.
 
 ### Busca
 
-#### `search(k, node)`
-Busca a chave `k` recursivamente a partir de `node`:
-- Se `k` for igual a alguma chave do nó atual, retorna o nó
-- Se o nó for folha, retorna `None` (não encontrado)
-- Caso contrário, desce para o filho apropriado
-
----
-
-### Visualização
-
-#### `printTree(node, level)`
-Exibe a árvore formatada por níveis, mostrando as chaves de cada nó e indicando raiz e folhas.
+`search(k, node)` desce recursivamente pela árvore: retorna o nó se `k` estiver nele, `None` se chegar numa folha sem encontrar, ou desce para o filho apropriado.
 
 ---
 
 ## Segurança contra loops infinitos
 
-Todas as funções recursivas (`goLeaf`, `findParent`, `split`, `insert`, `search`, `merge`, `remove`) possuem o parâmetro `_call_depth` com valor padrão `0`. A cada chamada recursiva, o valor é incrementado. Se `MAX_DEPTH` (100) for excedido, um `RecursionError` é levantado, prevenindo loops infinitos causados por bugs na lógica de reorganização.
+Todas as funções recursivas (`goLeaf`, `findParent`, `split`, `insert`, `search`, `merge`, `remove`) possuem o parâmetro `_call_depth`, incrementado a cada chamada. Se `MAX_DEPTH` (100) for excedido, um `RecursionError` é levantado, prevenindo loops infinitos causados por bugs na lógica de reorganização.
 
 ---
 
 ## Testes
 
-A função `main()` executa uma bateria de testes manuais que cobrem todos os casos de inserção e remoção:
+A função `main()` executa uma bateria de testes manuais:
 
-1. **Inserções** — 20 chaves inseridas, alternando entre nós com espaço e nós cheios (disparando splits)
-2. **Remoções** — 13 chaves removidas, cobrindo os casos 1a, 1b, 1c, 2a, 2b e remoção recursiva
-3. **Pesquisas** — busca de chave existente (28) e inexistente (51)
+1. **Inserções** — 20 chaves, alternando nós com espaço e nós cheios (disparando splits)
+2. **Remoções** — 13 chaves, cobrindo os casos 1a, 1b, 1c, 2a, 2b e remoção recursiva
+3. **Buscas** — chave existente (28) e inexistente (51)
 
 ---
 
-## Grau mínimo `t`
-
-O grau `t` é definido na criação da árvore:
+## Uso
 
 ```python
 btree = bTree(2)  # grau mínimo = 2
 ```
 
-Com `t = 2` (usado nos testes), cada nó pode ter entre 1 e 3 chaves, e cada nó não-folha tem entre 2 e 4 filhos.
+Com `t = 2`, cada nó pode ter entre 1 e 3 chaves, e cada nó não-folha tem entre 2 e 4 filhos.

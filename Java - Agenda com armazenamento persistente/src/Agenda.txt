@@ -1,3 +1,0 @@
-Rabelo;456123;Rua da Uva;SucoDeFruta@gmail
-Jose Turim;123456;Rua da Abóbora;SuquinDeUva@gmail
-Maria;12345678;Rua do Suco de Fruta;MamaoPapaia@gmail
