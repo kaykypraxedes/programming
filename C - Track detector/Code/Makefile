@@ -2,32 +2,25 @@ CC = gcc
 CFLAGS = -Wall -Wextra -std=c99 -pedantic-errors
 TARGET = detectarPista
 SRC = detectarPista.c
-CASOS = casos-teste
+CASOS = test-cases
 
-.PHONY: all clean run-teste1 run-teste2 run-teste3 run-teste4 run-all
+TEST_FILES = $(wildcard $(CASOS)/test-case_*.txt)
+TEST_TARGETS = $(patsubst $(CASOS)/test-case_%.txt, test-case_%, $(TEST_FILES))
+
+.PHONY: all clean
 
 all: $(TARGET)
+	@for test in $(TEST_TARGETS); do \
+		echo "========== $$test =========="; \
+		./$(TARGET) < $(CASOS)/$$test.txt; \
+	done
 
 $(TARGET): $(SRC)
 	$(CC) $(CFLAGS) -o $@ $^
 
-run-teste1: $(TARGET)
-	@echo "========== Caso de Teste 1 =========="
-	./$(TARGET) < $(CASOS)/caso-teste-1.txt
-
-run-teste2: $(TARGET)
-	@echo "========== Caso de Teste 2 =========="
-	./$(TARGET) < $(CASOS)/caso-teste-2.txt
-
-run-teste3: $(TARGET)
-	@echo "========== Caso de Teste 3 =========="
-	./$(TARGET) < $(CASOS)/caso-teste-3.txt
-
-run-teste4: $(TARGET)
-	@echo "========== Caso de Teste 4 =========="
-	./$(TARGET) < $(CASOS)/caso-teste-4.txt
-
-run-all: run-teste1 run-teste2 run-teste3 run-teste4
+test-case_%: $(TARGET) $(CASOS)/test-case_%.txt
+	@echo "========== $@ =========="
+	./$(TARGET) < $(CASOS)/$@.txt
 
 clean:
 	rm -f $(TARGET)

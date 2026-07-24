@@ -8,188 +8,214 @@ Desenvolvedores:
 #include <stdio.h>
 #include <stdlib.h>
 
-typedef struct lista{
-    int Chave;
-    int Tipo;
-    int NumElementos;
-    int *PontoMedio;
-    struct lista *nextPtr;
-} LISTA;
+typedef struct LIST{
+    int key;
+    int type;
+    int element_count;
+    struct LIST *next;
+} LIST;
 /*
-Cria o tipo LISTAPTR para evitar de usar ponteiro duplo **
+Cria o tipo LISTPTR para evitar de usar ponteiro duplo **
 (mais confortável visualmente)
 */
-typedef LISTA *LISTAPTR;
+typedef LIST *LISTPTR;
 
-void novo(LISTAPTR *ptr, int Chave, int Tipo, int *PontoMedio){
-    *ptr = (LISTAPTR)malloc(sizeof(LISTA));
-    (*ptr)->Chave = Chave;
-    (*ptr)->Tipo = Tipo;
-    (*ptr)->NumElementos = 1;
-    (*ptr)->PontoMedio = PontoMedio;
-    (*ptr)->nextPtr = NULL;
+// CreateNode: aloca e inicializa um nó da lista
+void CreateNode(LISTPTR *list, int key, int type){
+    *list = (LISTPTR)malloc(sizeof(LIST));
+    (*list)->key = key;
+    (*list)->type = type;
+    (*list)->element_count = 1;
+    (*list)->next = NULL;
 }
 
-void inserir(LISTAPTR *ptr, int Chave){
-    LISTAPTR newPtr, currentPtr, previousPtr;
-    currentPtr = *ptr;
-    int auxRepetido = 0;
-    // Verifica se a classificação desse número já ocorreu ou é um número novo
-    while(currentPtr != NULL){
-        if(currentPtr->Chave == Chave) auxRepetido = currentPtr->Tipo;
-        previousPtr = currentPtr;
-        currentPtr = currentPtr->nextPtr;
+// FindKeyType: busca key na lista; retorna ultimo no e preenche *type se encontrada
+LISTPTR FindKeyType(LISTPTR list, int key, int *type){
+    LISTPTR last = NULL;
+    while(list != NULL){
+        if(list->key == key) *type = list->type;
+        last = list;
+        list = list->next;
     }
-    // Se o elemento for o último
-    if(previousPtr != NULL && previousPtr->Chave == Chave) previousPtr->NumElementos++;
-    // Criar nova ramificação (1) já existente (0) nova
-    else{
-        novo(&newPtr, Chave, auxRepetido ? auxRepetido : 1, previousPtr->PontoMedio);
-        previousPtr->nextPtr = newPtr;
-        if(!auxRepetido){
-            int max = -1;
-            LISTAPTR auxLista = *ptr;
-            while(auxLista != NULL){
-                // Se encontrar um valor maior que o último na ordenação, ele é aumentado
-                if(newPtr->Chave < auxLista->Chave) auxLista->Tipo++;
-                // Encontra o antecessor da ordem do último valor novo e assume como seu sucessor
-                else if(newPtr->Chave > auxLista->Chave && auxLista->Chave > max){
-                    newPtr->Tipo = auxLista->Tipo + 1;
-                    max = auxLista->Chave;
-                }
-                auxLista = auxLista->nextPtr;               
-            }
+    return last;
+}
+
+// AppendNode: cria no e anexa apos previous, retorna o novo no
+LISTPTR AppendNode(LISTPTR previous, int key, int type){
+    LISTPTR new_node;
+    CreateNode(&new_node, key, type);
+    previous->next = new_node;
+    return new_node;
+}
+
+// ReclassifyByKey: reajusta types apos insercao de chave nova
+void ReclassifyByKey(LISTPTR list, LISTPTR new_node){
+    int max_key = -1;
+    while(list != NULL){
+        if(new_node->key < list->key)
+            list->type++;
+        else if(new_node->key > list->key && list->key > max_key){
+            new_node->type = list->type + 1;
+            max_key = list->key;
         }
+        list = list->next;
     }
 }
 
-int testa(LISTAPTR lista){
-    int PontoMedio = 0;
-    LISTAPTR listaAux;
-    while(lista != NULL){
-        listaAux = lista;
-        if(lista->Tipo == 1){
-            int PontoMedioAux = PontoMedio + listaAux->NumElementos;
-            listaAux = listaAux->nextPtr;
-            if(listaAux != NULL && listaAux->Tipo == 3){
-                PontoMedioAux += listaAux->NumElementos;
-                listaAux = listaAux->nextPtr;
-                if(listaAux != NULL && listaAux->Tipo == 2){
-                    PontoMedioAux += (listaAux->NumElementos)/2;
-                    listaAux = listaAux->nextPtr;
-                    if(listaAux != NULL && listaAux->Tipo == 3){
-                        listaAux = listaAux->nextPtr;
-                        if(listaAux != NULL && listaAux->Tipo == 1){
-                            return PontoMedioAux;
-                        }
-                    }
-                }
-            }
-        }
-        PontoMedio += lista->NumElementos;
-        lista = lista->nextPtr;
+// InsertKey: insere chave na lista encadeada
+void InsertKey(LISTPTR *list, int key){
+    int repeated_type = 0;
+    LISTPTR last = FindKeyType(*list, key, &repeated_type);
+    if(!last) return;
+
+    if(last->key == key){
+        last->element_count++;
+    } else {
+        LISTPTR new_node = AppendNode(last, key, repeated_type ? repeated_type : 1);
+        if(!repeated_type)
+            ReclassifyByKey(*list, new_node);
+    }
+}
+
+// MatchPattern5: tenta casar 5 tipos consecutivos e calcula contribuicao do midpoint
+int MatchPattern5(LISTPTR start, int pattern[5], int *midpoint_sum){
+    LISTPTR nodes[5];
+    for(int i = 0; i < 5; i++){
+        if(start == NULL || start->type != pattern[i])
+            return 0;
+        nodes[i] = start;
+        start = start->next;
+    }
+    *midpoint_sum = nodes[0]->element_count
+                  + nodes[1]->element_count
+                  + nodes[2]->element_count / 2;
+    return 1;
+}
+
+// FindSubPattern: tenta casar pattern[0..len-1] a partir de start
+// Retorna o ultimo no casado, ou NULL se nao casar
+LISTPTR FindSubPattern(LISTPTR start, int pattern[], int len){
+    LISTPTR last = NULL;
+    for(int i = 0; i < len; i++){
+        if(start == NULL || start->type != pattern[i])
+            return NULL;
+        last = start;
+        start = start->next;
+    }
+    return last;
+}
+
+// FindLane: busca padrao (1,3,2,3,1) e retorna ponto medio
+int FindLane(LISTPTR list){
+    int pattern[5] = {1, 3, 2, 3, 1};
+    int accumulated = 0;
+    while(list != NULL){
+        int midpoint_contrib;
+        if(MatchPattern5(list, pattern, &midpoint_contrib))
+            return accumulated + midpoint_contrib;
+        accumulated += list->element_count;
+        list = list->next;
     }
     return -1;
 }
 
-int TestaObstaculo(LISTAPTR lista){
-    LISTAPTR listaAux;
-    while(lista != NULL){
-        listaAux = lista;
-        if(lista->Tipo == 1){
-            listaAux = listaAux->nextPtr;
-            if(listaAux != NULL && listaAux->Tipo == 3){
-                listaAux = listaAux->nextPtr;
-                if(listaAux != NULL && listaAux->Tipo == 2){
-                    listaAux = listaAux->nextPtr;
-                    if(listaAux != NULL && listaAux->Tipo == 3){
-                        listaAux = listaAux->nextPtr;
-                        if(listaAux != NULL && listaAux->Tipo == 1){
-                            return 10;
-                        }
-                    }
-                    while (listaAux!=NULL){
-                        if(listaAux != NULL && listaAux->Tipo == 3){
-                            listaAux = listaAux->nextPtr;
-                            if(listaAux != NULL && listaAux->Tipo == 1){
-                                return 1;
-                            }
-                        }
-                        listaAux = listaAux->nextPtr;                          
-                    }
-                }
+// CheckObstacle: detecta padroes de obstaculo na pista
+int CheckObstacle(LISTPTR list){
+    int base_pattern[5] = {1, 3, 2, 3, 1};
+    int prefix_pattern[3] = {1, 3, 2};
+    int close_pattern[2] = {3, 1};
+    while(list != NULL){
+        if(FindSubPattern(list, base_pattern, 5) != NULL)
+            return 0;
+        LISTPTR after_prefix = FindSubPattern(list, prefix_pattern, 3);
+        if(after_prefix != NULL){
+            LISTPTR scan = after_prefix->next;
+            while(scan != NULL){
+                if(FindSubPattern(scan, close_pattern, 2) != NULL)
+                    return 1;
+                scan = scan->next;
             }
         }
-        lista = lista->nextPtr;
+        list = list->next;
     }
     return -1;
 }
 
-int contaObs(int vetor[], int tamanho){
-    int contador = 0;
-    for(int i = 0;i<tamanho; i++){
-        if(vetor[i]==1){
-            contador++;
+// CountObstacles: conta valores == 1 no vetor
+int CountObstacles(int array[], int size){
+    int counter = 0;
+    for(int i = 0; i < size; i++){
+        if(array[i]==1){
+            counter++;
         }
     }
-    return contador;
+    return counter;
 }
 
-void freePtr(LISTAPTR *lista){
-    LISTAPTR prevPtr;
-    while(*lista != NULL){
-        prevPtr = *lista;
-        *lista = (*lista)->nextPtr;
-        free(prevPtr);
+// FreeList: percorre e desaloca todos os nos
+void FreeList(LISTPTR *list){
+    LISTPTR current = NULL;
+    while(*list != NULL){
+        current = *list;
+        *list = (*list)->next;
+        free(current);
     }
 }
 
 int main(){
-    LISTAPTR myList = NULL;
-    int quantidade, L;
-    scanf(" %d", &L);
-    int PontosMedios[L], obstaculos[L];
-    int PontoMedio, obstaculo, numObs;
+    LISTPTR my_list = NULL;
+    int row_len, L;
+    if (scanf(" %d", &L) != 1) return 1;
+    int *midpoints = malloc(L * sizeof(int));
+    int *obstacles = malloc(L * sizeof(int));
+    if (!midpoints || !obstacles) { free(midpoints); free(obstacles); return 1; }
+    int midpoint = 0, obstacle = 0, obs_count = 0;
     for(int i = 0; i < L; i++){
-        scanf(" %d", &quantidade);
-        for(int j = 0; j < quantidade; j++){
-            int Chave;
-            scanf(" %d", &Chave);
-            if(j == 0) novo(&myList, Chave, 1, &PontoMedio);
-            else inserir(&myList, Chave);
+        if (scanf(" %d", &row_len) != 1){ FreeList(&my_list); return 1; }
+        for(int j = 0; j < row_len; j++){
+            int key;
+            if (scanf(" %d", &key) != 1){ FreeList(&my_list); return 1; }
+            if(j == 0) CreateNode(&my_list, key, 1);
+            else InsertKey(&my_list, key);
         }
-        PontoMedio = testa(myList); 
-        freePtr(&myList);
-        PontosMedios[i] = PontoMedio;
-        obstaculos[i] = obstaculo;
+        midpoint = FindLane(my_list);
+        obstacle = CheckObstacle(my_list);
+        FreeList(&my_list);
+        midpoints[i] = midpoint;
+        obstacles[i] = obstacle;
     }
-    numObs = contaObs(obstaculos, L);
-    // Calcular a média dos pontos médios
-    int soma = 0, cont = 0, validf=0;
+    obs_count = CountObstacles(obstacles, L);
+    // Calcular a media dos pontos medios
+    int sum = 0, valid_count = 0, last_valid_idx=0;
     for(int i = 0; i < L; i++){
-        if(PontosMedios[i] > 0){
-            soma += PontosMedios[i];
-            cont++;
-            validf = i;
+        if(midpoints[i] > 0){
+            sum += midpoints[i];
+            valid_count++;
+            last_valid_idx = i;
         }
     }
-    int media = 0;
-    // Se a quantidade de pontos médios válidos for maior que 70% do total
-    if (cont > 70 * L / 100){
-        media = (int) (soma / cont);
-        // media-14 < pontosMedios < media+14
-        if(media + 14 > PontosMedios[validf] && media - 30 < PontosMedios[validf]){ 
+    int mean = 0;
+    // Se a quantidade de pontos medios validos for maior que 70% do total
+    if (valid_count > 70 * L / 100){
+        mean = (int) (sum / valid_count);
+        int found = 0;
+        if(mean + 14 > midpoints[last_valid_idx] && mean - 14 < midpoints[last_valid_idx]){
             printf("Pista em linha reta e ");
-        } else if(media + 15 > PontosMedios[validf] && PontosMedios[validf] < PontosMedios[0]){
+            found = 1;
+        } else if(mean + 15 > midpoints[last_valid_idx] && midpoints[last_valid_idx] < midpoints[0]){
             printf("Curva a direita e ");
-        } else if(media-15 < PontosMedios[validf] && PontosMedios[validf] > PontosMedios[0]){
+            found = 1;
+        } else if(mean-15 < midpoints[last_valid_idx] && midpoints[last_valid_idx] > midpoints[0]){
             printf("Curva a esquerda e ");
+            found = 1;
         }
-        if(numObs > 0){
-            printf("com impedimento.\n");
-        } else{
-            printf("sem impedimento.\n");
+        if(found){
+            if(obs_count > 0){
+                printf("com impedimento.\n");
+            } else{
+                printf("sem impedimento.\n");
+            }
         }
-    } else printf("Formato da pista nao estimado.\n");
+    } else printf("Formato da pista não estimado.\n");
     return 0;
 }
