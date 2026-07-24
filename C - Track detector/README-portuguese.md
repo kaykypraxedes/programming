@@ -44,19 +44,14 @@ ombro esquerdo, centro da pista, ombro direito, borda direita.
 ## Estrutura do Projeto
 
 ```
-C - Detector de pista/
-├── README.md                    # Documentação do projeto
-├── TEMPLATE_README.md           # Template usado para o README
-├── PENDENCIAS.md                # Catálogo de bugs e melhorias
-├── Resumo do projeto.txt        # Descrição textual resumida
-└── Código/
-    ├── Makefile                 # Compilação e execução dos testes
-    ├── detectarPista.c          # Programa principal (~195 linhas)
-    └── casos-teste/
-        ├── detectarPista-casoTeste-1.txt  # Pista em linha reta
-        ├── detectarPista-casoTeste-2.txt  # Pista em linha reta
-        ├── detectarPista-casoTeste-3.txt  # Curva à esquerda
-        └── detectarPista-casoTeste-4.txt  # Pista em linha reta
+Code/
+├── Makefile                 # Compilação e execução dos testes
+├── detectarPista.c          # Programa principal
+└── casos-teste/
+    ├── detectarPista-casoTeste-1.txt  # Pista em linha reta
+    ├── detectarPista-casoTeste-2.txt  # Pista em linha reta
+    ├── detectarPista-casoTeste-3.txt  # Curva à esquerda
+    └── detectarPista-casoTeste-4.txt  # Pista em linha reta
 ```
 
 | Constante | Valor | Significado |
@@ -159,7 +154,7 @@ Quatro casos de teste localizados em `Código/casos-teste/`. Cada um contém
 Compilar e executar com `make`:
 
 ```bash
-cd Codigo
+cd Code
 make             # compila detectarPista
 make run-all     # executa os 4 casos de teste
 make run-teste1  # executa apenas o caso 1

@@ -12,25 +12,6 @@ Editor de PDF via terminal em Python, com suporte a extração de páginas, mesc
 - **Mesclar PDFs e imagens** — Combina múltiplos arquivos PDF e imagens (PNG, JPG, BMP, TIFF) em um único PDF, na ordem fornecida. Imagens são redimensionadas proporcionalmente à largura do último PDF processado.
 - **Converter imagem para PDF** — Converte uma imagem para PDF, com opção de redimensionar para a largura de uma folha A4 (595 pt) mantendo a proporção original.
 
----
-
-## Estrutura do Projeto
-
-```
-Python - Editor de PDF/
-├── pdfEditor.py         # Script único com toda a lógica e CLI
-├── TEMPLATE_README.md   # Template utilizado como base para este README
-├── Resumo do projeto.txt# Anotações preliminares do desenvolvedor
-├── PENDENCIAS.md        # Lista de problemas e melhorias identificadas
-└── README.md            # Documentação do projeto
-```
-
----
-
-## Módulos
-
-O projeto é um script único. Abaixo, a divisão lógica das funções.
-
 ### Helpers
 
 Funções auxiliares de uso geral:

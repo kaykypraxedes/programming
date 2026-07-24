@@ -17,7 +17,7 @@ Implementação educacional do algoritmo RSA em C++, com utilitários para gera�
 ## Estrutura do Projeto
 
 ```
-Código/
+Code/
 ├── main.cpp           # Interface principal (menu interativo)
 ├── cripto.cpp/.h      # Implementação do RSA
 ├── fatora.cpp/.h      # Decomposição em fatores primos
@@ -35,7 +35,7 @@ Gera números primos até um limite utilizando o **Crivo de Eratóstenes**. A fu
 
 ### fatora
 
-Recebe um vetor de primos do módulo `primos` e realiza divisões sucessivas para obter a decomposição em fatores primos. Retorna uma string formatada (ex: `"84 = 2² * 3 * 7"`).
+Recebe um vetor de primos do módulo `primos` e realiza divisões sucessivas para obter a decomposição em fatores primos. Retorna uma string formatada (ex: `"84 = 2^2 * 3 * 7"`).
 
 ### cripto
 
