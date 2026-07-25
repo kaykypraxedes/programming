@@ -1,0 +1,17 @@
+#!/bin/sh
+# tb_empty_system
+# Remove todos os voos (e consequentemente todos os dados) e verifica
+# se o relatório fica vazio
+
+. "$(dirname "$0")/helpers.sh"
+
+# Remove voo 1 (cascata: leva passagens 1,2 e passageiros 1,2)
+# Remove voo 2 (cascata: leva passagem 3 e passageiro 3)
+# Depois gera relatório
+set_input "1\n3\n1\n1\n3\n2\n4\n5\n"
+
+assert_not_contains "Voo 1"       || exit 1
+assert_not_contains "Voo 2"       || exit 1
+assert_not_contains "Joao Silva"  || exit 1
+assert_not_contains "Maria Oliveira" || exit 1
+assert_not_contains "Kayky Praxedes" || exit 1

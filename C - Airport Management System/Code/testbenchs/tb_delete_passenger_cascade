@@ -1,0 +1,12 @@
+#!/bin/sh
+# tb_delete_passenger_cascade
+# Remove passageiro 1 e verifica remoção em cascata das passagens
+
+. "$(dirname "$0")/helpers.sh"
+
+set_input "3\n3\n1\n4\n5\n"
+
+assert_not_contains "Joao Silva"  || exit 1
+# Voo 1 tinha 2 passageiros (Joao e Maria), agora deve ter 1 (Maria)
+assert_contains "Voo 1: 1 passagens" || exit 1
+assert_contains "Maria Oliveira"  || exit 1

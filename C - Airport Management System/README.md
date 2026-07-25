@@ -29,23 +29,45 @@ Each module offers: **Adicionar** (Add), **Alterar** (Edit), **Excluir** (Delete
 
 The system uses **singly linked lists** with dynamic allocation for three entities:
 
-| Entity         | Main attributes                                          |
-|----------------|----------------------------------------------------------|
-| **Voo**        | id, aircraft_number, airline, origin, destination, departure_date/time |
-| **Passagem**   | number, passenger_id, flight_id, value, sale_date        |
-| **Passageiro** | id, name, identity, address, phone, gender               |
+| Entity       | Main attributes                                                       |
+|--------------|-----------------------------------------------------------------------|
+| **Flight**   | id, aircraft_number, airline, origin, destination, departure_date, departure_time |
+| **Ticket**   | number, passenger_id, flight_id, price, sale_date                     |
+| **Passenger**| id, name, identity, address, phone, gender                            |
 
 ---
 
 ## Business Rules
 
-- **Limits:** maximum of 50 flights and 100 passengers per execution
+- **Limits:** maximum of 50 flights, 100 passengers, and 100 tickets per execution
 - **Unique identifiers:** flights and passengers cannot have duplicate IDs
 - **Referential integrity:**
   - When a flight is removed, all associated tickets and passengers are automatically removed
   - When a passenger is removed, their tickets are automatically removed
 - **Validation:** when creating a ticket, the system checks that the specified passenger and flight exist
 - **Test data:** 2 flights, 3 passengers, and 3 tickets are pre-loaded at initialization
+
+---
+
+## Building and Testing
+
+```bash
+cd Code && make                    # compile the program
+cd Code && make test               # run automated tests (12 testbenchs)
+cd Code && make clean              # remove build artifacts
+cd Code && ./airport_manager       # run the program
+```
+
+### Automated Tests
+
+The `Code/testbenchs/` directory contains 12 test scripts covering:
+
+- Initial report integrity
+- Add / duplicate rejection for flights, passengers, and tickets
+- Cascade deletion (flight and passenger removal)
+- Ticket removal and counter consistency
+- Flight data update
+- Empty system state
 
 ---
 
@@ -59,23 +81,15 @@ The system uses **singly linked lists** with dynamic allocation for three entiti
 
 ---
 
-## Known Limitations
+## Implementation Choices
 
-- **No data persistence** — all information is lost when the program ends
-- **Monolithic code** — the entire system is in a single `.c` file
-- **Fragile input validation** — uses `scanf` without handling invalid inputs
-- **Memory leaks** — not all allocated memory is properly freed
-- **Inconsistent limit counting** — the `qvoos` and `qpassageiros` fields have update flaws
-- **Known bug:** ticket limit check in the `adicionar` function traverses the list to the end and tries to access a null node
+These are deliberate design decisions made to keep the project simple and focused:
 
----
+- **Arbitrary limits** — the 50-flight, 100-passenger, and 100-ticket caps are
+  not business requirements; they exist to prevent unbounded memory growth in
+  this academic project.
+- **Monolithic code** — the entire system lives in a single `.c` file for
+  straightforward compilation with no external dependencies.
+- **In-memory storage** — all data resides in linked lists and is lost when the
+  program exits. No file or database persistence was implemented.
 
-## Possible Future Improvements
-
-- [ ] File persistence (binary or text)
-- [ ] Code modularization into multiple files (.h / .c)
-- [ ] Graphical interface or web version
-- [ ] Robust user input validation
-- [ ] Fix memory leaks
-- [ ] Automated tests
-- [ ] Support for aircraft and airline registration

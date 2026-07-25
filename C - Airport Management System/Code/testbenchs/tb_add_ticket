@@ -1,0 +1,10 @@
+#!/bin/sh
+# tb_add_ticket
+# Adiciona uma passagem e verifica se o total do voo aumenta
+
+. "$(dirname "$0")/helpers.sh"
+
+set_input "2\n1\n1\n1\n300\n01/01/2025\n4\n5\n"
+
+# Voo 1 tinha 2 passagens, agora deve ter 3
+assert_contains "Voo 1: 3 passagens" || exit 1

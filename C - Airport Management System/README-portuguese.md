@@ -29,23 +29,45 @@ Cada módulo oferece: **Adicionar**, **Alterar**, **Excluir**, **Consultar**, **
 
 O sistema utiliza **listas encadeadas simples** com alocação dinâmica para três entidades:
 
-| Entidade      | Atributos principais                                  |
-|---------------|-------------------------------------------------------|
-| **Voo**       | identificador, numero_aeronave, empresa, origem, destino, data/horario_partida |
-| **Passagem**  | numero, id_passageiro, id_voo, valor, data_venda      |
-| **Passageiro**| identificador, nome, identidade, endereco, telefone, sexo |
+| Entidade      | Atributos principais (nomes em inglês no código)                        |
+|---------------|-------------------------------------------------------------------------|
+| **Voo**       | id, aircraft_number, airline, origin, destination, departure_date, departure_time |
+| **Passagem**  | number, passenger_id, flight_id, price, sale_date                       |
+| **Passageiro**| id, name, identity, address, phone, gender                              |
 
 ---
 
 ## Regras de Negócio
 
-- **Limites:** máximo de 50 voos e 100 passageiros por execução
+- **Limites:** máximo de 50 voos, 100 passageiros e 100 passagens por execução
 - **Identificadores únicos:** voos e passageiros não podem ter IDs duplicados
 - **Integridade referencial:**
   - Ao remover um voo, todas as passagens e passageiros associados são removidos automaticamente
   - Ao remover um passageiro, suas passagens são removidas automaticamente
 - **Validação:** ao criar uma passagem, o sistema verifica se o passageiro e o voo informados existem
 - **Dados de teste:** 2 voos, 3 passageiros e 3 passagens são pré-carregados na inicialização
+
+---
+
+## Compilação e Testes
+
+```bash
+cd Code && make                    # compilar o programa
+cd Code && make test               # executar testes automatizados (12 testbenchs)
+cd Code && make clean              # remover artefatos de compilação
+cd Code && ./airport_manager       # executar o programa
+```
+
+### Testes Automatizados
+
+O diretório `Code/testbenchs/` contém 12 scripts de teste cobrindo:
+
+- Integridade do relatório inicial
+- Adição e rejeição de duplicatas para voos, passageiros e passagens
+- Remoção em cascata (voo e passageiro)
+- Remoção de passagem e consistência dos contadores
+- Alteração de dados de voo
+- Estado do sistema vazio
 
 ---
 
@@ -59,23 +81,15 @@ O sistema utiliza **listas encadeadas simples** com alocação dinâmica para tr
 
 ---
 
-## Limitações Conhecidas
+## Escolhas de Implementação
 
-- **Sem persistência de dados** — todas as informações são perdidas ao encerrar o programa
-- **Código monolítico** — todo o sistema está em um único arquivo `.c`
-- **Validação de entrada frágil** — uso de `scanf` sem tratamento de entradas inválidas
-- **Vazamentos de memória** — nem toda memória alocada é liberada adequadamente
-- **Contagem de limites inconsistente** — os campos `qvoos` e `qpassageiros` apresentam falhas de atualização
-- **Bug conhecido:** verificação do limite de passagens na função `adicionar` percorre a lista até o final e tenta acessar um nó nulo
+Estas são decisões deliberadas de projeto para manter o código simples e focado:
 
----
-
-## Melhorias Futuras Possíveis
-
-- [ ] Persistência em arquivo (binário ou texto)
-- [ ] Modularização do código em múltiplos arquivos (.h / .c)
-- [ ] Interface gráfica ou versão web
-- [ ] Validação robusta de entrada do usuário
-- [ ] Correção de vazamentos de memória
-- [ ] Testes automatizados
-- [ ] Suporte a cadastro de aeronaves e empresas
+- **Limites arbitrários** — os tetos de 50 voos, 100 passageiros e 100 passagens
+  não são requisitos de negócio; existem para evitar crescimento ilimitado de
+  memória neste projeto acadêmico.
+- **Código monolítico** — todo o sistema está em um único arquivo `.c` por
+  escolha, para compilação simples sem dependências externas.
+- **Armazenamento em memória** — todos os dados estão em listas encadeadas e
+  são perdidos ao encerrar o programa. Nenhuma persistência em arquivo ou banco
+  de dados foi implementada.

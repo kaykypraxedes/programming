@@ -1,0 +1,9 @@
+#!/bin/sh
+# tb_add_passenger
+# Adiciona um passageiro e consulta para confirmar
+
+. "$(dirname "$0")/helpers.sh"
+
+set_input "3\n1\n10\nFulano\n123\nRua X\n1199999999\nM\n3\n4\n5\n"
+
+assert_contains "Fulano" || exit 1

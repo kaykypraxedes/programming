@@ -1,0 +1,9 @@
+#!/bin/sh
+# tb_add_flight
+# Adiciona um voo e verifica se aparece no relatório
+
+. "$(dirname "$0")/helpers.sh"
+
+set_input "1\n1\n10\n100\nGol\n01/01/2025\n08:00\nSP\nRJ\n4\n5\n"
+
+assert_contains "Gol" || exit 1

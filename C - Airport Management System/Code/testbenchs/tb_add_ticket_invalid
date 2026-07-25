@@ -1,0 +1,13 @@
+#!/bin/sh
+# tb_add_ticket_invalid
+# Tenta criar passagem com passageiro e voo que não existem
+
+. "$(dirname "$0")/helpers.sh"
+
+# Passageiro inexistente
+set_input "2\n1\n999\n5\n"
+assert_contains "nao existe" || exit 1
+
+# Voo inexistente
+set_input "2\n1\n1\n999\n5\n"
+assert_contains "nao existe" || exit 1

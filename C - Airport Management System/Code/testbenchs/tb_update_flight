@@ -1,0 +1,12 @@
+#!/bin/sh
+# tb_update_flight
+# Altera dados de um voo e consulta para confirmar as alterações
+
+. "$(dirname "$0")/helpers.sh"
+
+# Altera voo 1, depois consulta voos para ver os dados atualizados
+set_input "1\n2\n1\n200\nNovaEmp\n05/05/2025\n12:00\nNovoLocal\nOutroLocal\n1\n4\n5\n"
+
+assert_contains "NovaEmp"   || exit 1
+assert_contains "NovoLocal" || exit 1
+assert_contains "OutroLocal" || exit 1

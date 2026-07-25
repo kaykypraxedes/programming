@@ -1,0 +1,9 @@
+#!/bin/sh
+# tb_add_duplicate_flight
+# Tenta adicionar voo com ID já existente — deve rejeitar
+
+. "$(dirname "$0")/helpers.sh"
+
+set_input "1\n1\n1\n5\n"
+
+assert_contains "ja foi cadastrado" || exit 1

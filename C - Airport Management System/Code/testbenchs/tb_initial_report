@@ -1,0 +1,16 @@
+#!/bin/sh
+# tb_initial_report
+# Verifica se o relatório inicial exibe todos os dados de teste corretamente
+
+. "$(dirname "$0")/helpers.sh"
+
+set_input "4\n5\n"
+
+assert_contains "Voo 1"          || exit 1
+assert_contains "Voo 2"          || exit 1
+assert_contains "EmpresaX"       || exit 1
+assert_contains "EmpresaY"       || exit 1
+assert_contains "Joao Silva"     || exit 1
+assert_contains "Maria Oliveira" || exit 1
+assert_contains "Kayky Praxedes" || exit 1
+assert_contains "2 passagens"    || exit 1

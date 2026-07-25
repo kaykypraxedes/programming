@@ -1,0 +1,10 @@
+#!/bin/sh
+# tb_delete_ticket
+# Remove uma passagem e verifica se o total do voo diminui
+
+. "$(dirname "$0")/helpers.sh"
+
+set_input "2\n3\n1\n4\n5\n"
+
+# Voo 1 tinha 2 passagens, agora deve ter 1
+assert_contains "Voo 1: 1 passagens" || exit 1
