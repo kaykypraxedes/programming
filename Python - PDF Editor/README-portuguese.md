@@ -51,16 +51,6 @@ Converte uma imagem para PDF. Aceita PNG, JPG, BMP, TIFF, WEBP e GIF.
 
 ---
 
-## Segurança / Limitações / Robustez
-
-- **Sem confirmação de sobrescrita** — Apenas o helper `DefineAvailableName` previne sobrescrita do arquivo final.
-- **Dependência de Python ≥ 3.10** — Devido ao uso de `match/case`.
-- **Tratamento de erros genérico** — Todas as exceções são capturadas como `Exception` e exibidas como mensagem simples. Não há logging nem distinção entre erro do usuário e erro interno.
-- **Entrada de dados frágil** — Validação limitada no parsing de intervalos de páginas; entradas mal formatadas podem quebrar.
-- **Projeto educacional/utilitário** — Adequado para uso pessoal e aprendizado, não recomendado para ambientes de produção sem as correções apontadas em `TODO.md`.
-
----
-
 ## Testes
 
 Testes automatizados são escritos com `pytest` e estão localizados no diretório `tests/`. Execute com:
