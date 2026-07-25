@@ -1,4 +1,4 @@
-# Lane Detector
+# Track Detector
 
 C implementation that processes optical sensor readings (values 0, 128, 255) to detect lane markings, classify curves (left/right), and identify obstacles — using linked lists with grouping of consecutive equal values and classification by order of appearance.
 
