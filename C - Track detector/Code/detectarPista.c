@@ -14,13 +14,11 @@ typedef struct LIST{
     int element_count;
     struct LIST *next;
 } LIST;
-/*
-Cria o tipo LISTPTR para evitar de usar ponteiro duplo **
-(mais confortável visualmente)
-*/
+
+// Cria o tipo LISTPTR para evitar de usar ponteiro duplo (mais confortável visualmente):
 typedef LIST *LISTPTR;
 
-// CreateNode: aloca e inicializa um nó da lista
+// Aloca e inicializa um nó da lista:
 void CreateNode(LISTPTR *list, int key, int type){
     *list = (LISTPTR)malloc(sizeof(LIST));
     (*list)->key = key;
@@ -29,7 +27,7 @@ void CreateNode(LISTPTR *list, int key, int type){
     (*list)->next = NULL;
 }
 
-// FindKeyType: busca key na lista; retorna ultimo no e preenche *type se encontrada
+// Busca key na lista (retorna último nó e preenche *type se encontrada):
 LISTPTR FindKeyType(LISTPTR list, int key, int *type){
     LISTPTR last = NULL;
     while(list != NULL){
@@ -40,7 +38,7 @@ LISTPTR FindKeyType(LISTPTR list, int key, int *type){
     return last;
 }
 
-// AppendNode: cria no e anexa apos previous, retorna o novo no
+// Cria nó e anexa após previous, retorna o novo nó:
 LISTPTR AppendNode(LISTPTR previous, int key, int type){
     LISTPTR new_node;
     CreateNode(&new_node, key, type);
@@ -48,7 +46,7 @@ LISTPTR AppendNode(LISTPTR previous, int key, int type){
     return new_node;
 }
 
-// ReclassifyByKey: reajusta types apos insercao de chave nova
+// Reajusta types após inserção de chave nova:
 void ReclassifyByKey(LISTPTR list, LISTPTR new_node){
     int max_key = -1;
     while(list != NULL){
@@ -62,7 +60,7 @@ void ReclassifyByKey(LISTPTR list, LISTPTR new_node){
     }
 }
 
-// InsertKey: insere chave na lista encadeada
+// Insere chave na lista encadeada:
 void InsertKey(LISTPTR *list, int key){
     int repeated_type = 0;
     LISTPTR last = FindKeyType(*list, key, &repeated_type);
@@ -77,7 +75,7 @@ void InsertKey(LISTPTR *list, int key){
     }
 }
 
-// MatchPattern5: tenta casar 5 tipos consecutivos e calcula contribuicao do midpoint
+// Tenta casar 5 tipos consecutivos e calcula contribuição do midpoint:
 int MatchPattern5(LISTPTR start, int pattern[5], int *midpoint_sum){
     LISTPTR nodes[5];
     for(int i = 0; i < 5; i++){
@@ -92,8 +90,7 @@ int MatchPattern5(LISTPTR start, int pattern[5], int *midpoint_sum){
     return 1;
 }
 
-// FindSubPattern: tenta casar pattern[0..len-1] a partir de start
-// Retorna o ultimo no casado, ou NULL se nao casar
+// Tenta casar pattern[0..len-1] a partir de start (retorna o último no casado, ou NULL se nao casar):
 LISTPTR FindSubPattern(LISTPTR start, int pattern[], int len){
     LISTPTR last = NULL;
     for(int i = 0; i < len; i++){
@@ -105,7 +102,7 @@ LISTPTR FindSubPattern(LISTPTR start, int pattern[], int len){
     return last;
 }
 
-// FindLane: busca padrao (1,3,2,3,1) e retorna ponto medio
+// Busca padrão (1,3,2,3,1) e retorna ponto médio:
 int FindLane(LISTPTR list){
     int pattern[5] = {1, 3, 2, 3, 1};
     int accumulated = 0;
@@ -119,7 +116,7 @@ int FindLane(LISTPTR list){
     return -1;
 }
 
-// CheckObstacle: detecta padroes de obstaculo na pista
+// Detecta padrões de obstáculo na pista:
 int CheckObstacle(LISTPTR list){
     int base_pattern[5] = {1, 3, 2, 3, 1};
     int prefix_pattern[3] = {1, 3, 2};
@@ -141,7 +138,7 @@ int CheckObstacle(LISTPTR list){
     return -1;
 }
 
-// CountObstacles: conta valores == 1 no vetor
+// Conta valores == 1 no vetor:
 int CountObstacles(int array[], int size){
     int counter = 0;
     for(int i = 0; i < size; i++){
@@ -152,7 +149,7 @@ int CountObstacles(int array[], int size){
     return counter;
 }
 
-// FreeList: percorre e desaloca todos os nos
+// Desaloca todos os nós:
 void FreeList(LISTPTR *list){
     LISTPTR current = NULL;
     while(*list != NULL){
@@ -162,18 +159,24 @@ void FreeList(LISTPTR *list){
     }
 }
 
+// main:
 int main(){
     LISTPTR my_list = NULL;
+    // Número de linhas:
     int row_len, L;
     if (scanf(" %d", &L) != 1) return 1;
     int *midpoints = malloc(L * sizeof(int));
     int *obstacles = malloc(L * sizeof(int));
+    // Em caso de erro de alocação:
     if (!midpoints || !obstacles) { free(midpoints); free(obstacles); return 1; }
     int midpoint = 0, obstacle = 0, obs_count = 0;
+    // Recebe os valores de cada elemento de cada linha:
     for(int i = 0; i < L; i++){
+        // Proteção de input:
         if (scanf(" %d", &row_len) != 1){ FreeList(&my_list); return 1; }
         for(int j = 0; j < row_len; j++){
             int key;
+            // Proteção de input:
             if (scanf(" %d", &key) != 1){ FreeList(&my_list); return 1; }
             if(j == 0) CreateNode(&my_list, key, 1);
             else InsertKey(&my_list, key);
@@ -185,7 +188,7 @@ int main(){
         obstacles[i] = obstacle;
     }
     obs_count = CountObstacles(obstacles, L);
-    // Calcular a media dos pontos medios
+    // Calcular a média dos pontos médios:
     int sum = 0, valid_count = 0, last_valid_idx=0;
     for(int i = 0; i < L; i++){
         if(midpoints[i] > 0){
@@ -195,17 +198,20 @@ int main(){
         }
     }
     int mean = 0;
-    // Se a quantidade de pontos medios validos for maior que 70% do total
+    // Se a quantidade de pontos médios válidos for maior que 70% do total:
     if (valid_count > 70 * L / 100){
         mean = (int) (sum / valid_count);
         int found = 0;
+        // Curvatura máxima entre -14 e 14:
         if(mean + 14 > midpoints[last_valid_idx] && mean - 14 < midpoints[last_valid_idx]){
             printf("Pista em linha reta e ");
             found = 1;
-        } else if(mean + 15 > midpoints[last_valid_idx] && midpoints[last_valid_idx] < midpoints[0]){
+        } // Curvatura máxima >= 15
+        else if(mean + 15 > midpoints[last_valid_idx] && midpoints[last_valid_idx] < midpoints[0]){
             printf("Curva a direita e ");
             found = 1;
-        } else if(mean-15 < midpoints[last_valid_idx] && midpoints[last_valid_idx] > midpoints[0]){
+        } // Curvatura máxima <= -15
+        else if(mean-15 < midpoints[last_valid_idx] && midpoints[last_valid_idx] > midpoints[0]){
             printf("Curva a esquerda e ");
             found = 1;
         }
