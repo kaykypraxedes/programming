@@ -8,7 +8,7 @@ import sys
 import tempfile
 
 from PIL import Image
-from pypdf import PdfReader, PdfWriter, PageObject
+from pypdf import PageObject, PdfReader, PdfWriter
 
 LARGURA_A4_PT = 595
 EXTENSOES_IMAGEM_VALIDAS = (".png", ".jpg", ".jpeg", ".bmp", ".tiff", ".webp", ".gif")
@@ -26,8 +26,8 @@ def ExtractFilePath(token: str) -> str:
 
 
 # Retorna um nome de arquivo disponível adicionando um sufixo (n) incremental se o nome já existir, evitando sobrescrita.
-# Input:  name  (str)
-# Output: (str)
+# Input:  str
+# Output: str
 def DefineAvailableName(name: str) -> str:
     base_name, ext = os.path.splitext(name)
     match = re.search(r"\(\d+\)$", base_name)
@@ -42,8 +42,8 @@ def DefineAvailableName(name: str) -> str:
 
 
 # Remove o canal alpha de imagens PNG, preenchendo o fundo com branco.
-# Input:  img  (Image)
-# Output: (Image)
+# Input:  Image
+# Output: Image
 def RemoveTransparency(img: Image.Image) -> Image.Image:
     if img.mode in ("RGBA", "LA") or (img.mode == "P" and "transparency" in img.info):
         background = Image.new("RGB", img.size, (255, 255, 255))
@@ -54,8 +54,8 @@ def RemoveTransparency(img: Image.Image) -> Image.Image:
 
 # Retorna a largura (em pontos) da primeira página do primeiro PDF da lista.
 # Se nenhum PDF for encontrado, retorna 595 (largura A4).
-# Input:  files  (list[str])
-# Output: (int)
+# Input:  list[str]
+# Output: int
 def CalculateWidth(files: list[str]) -> int:
     for file in files:
         ext = os.path.splitext(file)[1].lower()
@@ -67,7 +67,7 @@ def CalculateWidth(files: list[str]) -> int:
 
 # Redimensiona uma página de PDF proporcionalmente a uma largura alvo.
 # Modifica a página in-place, não retorna nada.
-# Input:  page (PageObject), max_width (int)
+# Input:  PageObject, int
 # Output: None
 def ResizePdfPage(page: PageObject, max_width: int) -> None:
     ratio = max_width / page.mediabox.width
@@ -78,9 +78,10 @@ def ResizePdfPage(page: PageObject, max_width: int) -> None:
 
 # FUNÇÕES DO PROGRAMA
 
+
 # Extrai um intervalo de páginas de um PDF e salva em um novo arquivo.
-# Input:  start_page (int), end_page (int), input_file (str)
-# Output: (bool)
+# Input:  int, int, str
+# Output: bool
 def ExtractPdf(start_page: int, end_page: int, input_file: str) -> bool:
     try:
         if not os.path.exists(input_file):
@@ -114,8 +115,8 @@ def ExtractPdf(start_page: int, end_page: int, input_file: str) -> bool:
 
 # Mescla múltiplos arquivos (PDFs e imagens) em um único PDF.
 # Imagens são convertidas para PDF temporariamente antes da mesclagem.
-# Input:  input_files  (list[str])
-# Output: (bool)
+# Input:  list[str]
+# Output: bool
 def MergePdf(input_files: list[str]) -> bool:
     try:
         if not input_files:
@@ -161,8 +162,8 @@ def MergePdf(input_files: list[str]) -> bool:
 
 # Converte uma imagem (PNG, JPG, BMP, TIFF) para PDF.
 # Opcionalmente redimensiona a página para uma largura alvo.
-# Input:  image_file (str), output_file (str | None), width (int | None)
-# Output: (bool)
+# Input:  str, str | None, int | None
+# Output: bool
 def ImageToPdf(
     image_file: str, output_file: str | None = None, width: int | None = None
 ) -> bool:
@@ -230,7 +231,9 @@ if __name__ == "__main__":
                 formatted_text = cli_args[1].replace(" ", "")
             else:
                 file_path = ExtractFilePath(
-                    input('Insira o path entre aspas ("") do arquivo (com extensão)\n- ')
+                    input(
+                        'Insira o path entre aspas ("") do arquivo (com extensão)\n- '
+                    )
                 )
                 formatted_text = input(
                     "Digite as páginas (ex: 1-3-10, 12-15, 1-7-9)\n- "
@@ -258,7 +261,9 @@ if __name__ == "__main__":
                 conversion_type = int(cli_args[1])
             else:
                 file_path = ExtractFilePath(
-                    input('Insira o path entre aspas ("") do arquivo (com extensão)\n- ')
+                    input(
+                        'Insira o path entre aspas ("") do arquivo (com extensão)\n- '
+                    )
                 )
                 while True:
                     try:
