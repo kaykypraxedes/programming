@@ -1,4 +1,4 @@
-/* tempo.h */
+/* Tempo.h */
 #ifndef TEMPO_H
 #define TEMPO_H
 #include <string>

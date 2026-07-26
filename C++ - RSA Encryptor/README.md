@@ -18,11 +18,11 @@ Educational implementation of the RSA algorithm in C++, with utilities for prime
 
 ```
 Code/
-├── main.cpp           # Main interface (interactive menu)
-├── cripto.cpp/.h      # RSA implementation
-├── fatora.cpp/.h      # Prime factor decomposition
-├── primos.cpp/.h      # Prime generation (Sieve of Eratosthenes)
-└── tempo.cpp/.h       # Time formatting (us → ms → s → min)
+├── Main.cpp           # Main interface (interactive menu)
+├── Cripto.cpp/.h      # RSA implementation
+├── Fatora.cpp/.h      # Prime factor decomposition
+├── Primos.cpp/.h      # Prime generation (Sieve of Eratosthenes)
+└── Rempo.cpp/.h       # Time formatting (us → ms → s → min)
 ```
 
 ---

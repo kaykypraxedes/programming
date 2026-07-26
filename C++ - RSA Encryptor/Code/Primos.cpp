@@ -1,5 +1,5 @@
 /* primos.cpp */
-#include "headers/primos.h"
+#include "headers/Primos.h"
 // Elementos privados
 static std::vector<bool> crivo{}; // Armazena as posições válidas do Crivo
 static std::vector<unsigned long long int> primos{};

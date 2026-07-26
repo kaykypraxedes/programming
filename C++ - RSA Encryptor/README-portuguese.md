@@ -18,11 +18,11 @@ Implementação educacional do algoritmo RSA em C++, com utilitários para gera�
 
 ```
 Code/
-├── main.cpp           # Interface principal (menu interativo)
-├── cripto.cpp/.h      # Implementação do RSA
-├── fatora.cpp/.h      # Decomposição em fatores primos
-├── primos.cpp/.h      # Geração de primos (Crivo de Eratóstenes)
-└── tempo.cpp/.h       # Formatação de tempo (us → ms → s → min)
+├── Main.cpp           # Interface principal (menu interativo)
+├── Cripto.cpp/.h      # Implementação do RSA
+├── Fatora.cpp/.h      # Decomposição em fatores primos
+├── Primos.cpp/.h      # Geração de primos (Crivo de Eratóstenes)
+└── Tempo.cpp/.h       # Formatação de tempo (us → ms → s → min)
 ```
 
 ---

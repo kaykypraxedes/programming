@@ -1,5 +1,5 @@
-/* cripto.cpp */
-#include "headers/cripto.h"
+/* Cripto.cpp */
+#include "headers/Cripto.h"
 // Elementos privados
 // Uso comum:
 // Multiplicação binária (mantém um valor máximo de bits, pois, para as operações modulares, não é necessário o valor completo)

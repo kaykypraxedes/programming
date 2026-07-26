@@ -1,5 +1,5 @@
 /* tempo.cpp */
-#include "headers/tempo.h"
+#include "headers/Tempo.h"
 // Ajusta a escala para um formato "n minuto(s) e nn segundo(s)" ou "nnn "str"segundo(s)"
 std::string ajustaEscala(unsigned long long int duracao){
     int i{};

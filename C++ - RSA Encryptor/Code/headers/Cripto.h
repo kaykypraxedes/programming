@@ -1,4 +1,4 @@
-/* cripto.h */
+/* Cripto.h */
 #ifndef CRIPTO_H
 #define CRIPTO_H
 #include <string>

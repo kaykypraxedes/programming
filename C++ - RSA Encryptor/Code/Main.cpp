@@ -5,9 +5,9 @@ Desenvolvedor:
 */
 
 #include <iostream>
-#include "headers/fatora.h"
-#include "headers/primos.h"
-#include "headers/cripto.h"
+#include "headers/Fatora.h"
+#include "headers/Primos.h"
+#include "headers/Cripto.h"
 void imprimeFatoracao(){
     std::cout << "\n====================== Fatoração ======================\n\n";
     unsigned long long int valor{};
