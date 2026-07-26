@@ -10,7 +10,7 @@ Desenvolvedores:
 #include <string.h>
 
 /*
- * Constantes para limites do sistema:
+ * Constantes para limites do sistema (arbitrário):
  * MAX_FLIGHTS    – número máximo de voos suportados
  * MAX_PASSENGERS – número máximo de passageiros suportados
  * MAX_TICKETS    – número máximo de passagens suportadas
@@ -19,7 +19,7 @@ Desenvolvedores:
 #define MAX_PASSENGERS 100
 #define MAX_TICKETS    100
 
-/* === Estruturas de Dados === */
+// Estruturas de Dados:
 
 typedef struct flight {
     int id;
@@ -57,7 +57,7 @@ typedef struct passenger {
 
 typedef PASSENGER *PASSENGER_PTR;
 
-/* === Protótipos === */
+// Protótipos:
 
 int MainMenu(void);
 int SubMenu(void);
@@ -72,17 +72,12 @@ void Update(FLIGHT_PTR *, TICKET_PTR *, PASSENGER_PTR *, int);
 void View(const FLIGHT_PTR *, const TICKET_PTR *, const PASSENGER_PTR *, int);
 void Delete(FLIGHT_PTR *, TICKET_PTR *, PASSENGER_PTR *, int);
 void Report(FLIGHT_PTR, PASSENGER_PTR, TICKET_PTR);
+void AddElements(FLIGHT_PTR *, TICKET_PTR *, PASSENGER_PTR *);
+void FreeMemory(FLIGHT_PTR, TICKET_PTR, PASSENGER_PTR);
 
-/* === Função Principal === */
+void AddElements(FLIGHT_PTR *flight_ptr, TICKET_PTR *ticket_ptr, PASSENGER_PTR *passenger_ptr) {
 
-int main(void) {
-    FLIGHT_PTR flight = NULL;
-    TICKET_PTR ticket = NULL;
-    PASSENGER_PTR passenger = NULL;
-
-    /* --- Dados de teste --- */
-
-    /* Voo 1 */
+    // Voo 1
     FLIGHT *flight1 = malloc(sizeof(FLIGHT));
     flight1->id = 1;
     flight1->aircraft_number = 101;
@@ -92,9 +87,9 @@ int main(void) {
     snprintf(flight1->origin, sizeof(flight1->origin), "Sao Paulo");
     snprintf(flight1->destination, sizeof(flight1->destination), "Rio de Janeiro");
     flight1->next = NULL;
-    flight = flight1;
+    *flight_ptr = flight1;
 
-    /* Voo 2 */
+    // Voo 2
     FLIGHT *flight2 = malloc(sizeof(FLIGHT));
     flight2->id = 2;
     flight2->aircraft_number = 911;
@@ -107,7 +102,7 @@ int main(void) {
     flight1->next = flight2;
     total_flights = 2;
 
-    /* Passageiro 1 */
+    // Passageiro 1
     PASSENGER *passenger1 = malloc(sizeof(PASSENGER));
     passenger1->id = 1;
     snprintf(passenger1->name, sizeof(passenger1->name), "Joao Silva");
@@ -116,10 +111,10 @@ int main(void) {
     snprintf(passenger1->phone, sizeof(passenger1->phone), "(11) 98765-4321");
     passenger1->gender = 'M';
     passenger1->next = NULL;
-    passenger = passenger1;
+    *passenger_ptr = passenger1;
     total_passengers++;
 
-    /* Passageiro 2 */
+    // Passageiro 2
     PASSENGER *passenger2 = malloc(sizeof(PASSENGER));
     passenger2->id = 2;
     snprintf(passenger2->name, sizeof(passenger2->name), "Maria Oliveira");
@@ -131,7 +126,7 @@ int main(void) {
     passenger1->next = passenger2;
     total_passengers++;
 
-    /* Passageiro 3 */
+    // Passageiro 3
     PASSENGER *passenger3 = malloc(sizeof(PASSENGER));
     passenger3->id = 3;
     snprintf(passenger3->name, sizeof(passenger3->name), "Kayky Praxedes");
@@ -143,7 +138,7 @@ int main(void) {
     passenger2->next = passenger3;
     total_passengers++;
 
-    /* Passagem 1 */
+    // Passagem 1
     TICKET *ticket1 = malloc(sizeof(TICKET));
     ticket1->number = 1;
     ticket1->passenger_id = 1;
@@ -151,10 +146,10 @@ int main(void) {
     ticket1->price = 500.00;
     snprintf(ticket1->sale_date, sizeof(ticket1->sale_date), "01/09/2024");
     ticket1->next = NULL;
-    ticket = ticket1;
+    *ticket_ptr = ticket1;
     total_tickets++;
 
-    /* Passagem 2 */
+    // Passagem 2
     TICKET *ticket2 = malloc(sizeof(TICKET));
     ticket2->number = 2;
     ticket2->passenger_id = 2;
@@ -165,7 +160,7 @@ int main(void) {
     ticket1->next = ticket2;
     total_tickets++;
 
-    /* Passagem 3 */
+    // Passagem 3
     TICKET *ticket3 = malloc(sizeof(TICKET));
     ticket3->number = 3;
     ticket3->passenger_id = 3;
@@ -175,37 +170,9 @@ int main(void) {
     ticket3->next = NULL;
     ticket2->next = ticket3;
     total_tickets++;
+}
 
-    /* Loop principal do programa */
-    int choice;
-    while ((choice = MainMenu()) != 5) {
-        int inner_choice;
-        switch (choice) {
-        case 1:
-            puts("Voos");
-            inner_choice = SubMenu();
-            ExecuteAction(&flight, &ticket, &passenger, choice, inner_choice);
-            break;
-        case 2:
-            puts("Passagens");
-            inner_choice = SubMenu();
-            ExecuteAction(&flight, &ticket, &passenger, choice, inner_choice);
-            break;
-        case 3:
-            puts("Passageiros");
-            inner_choice = SubMenu();
-            ExecuteAction(&flight, &ticket, &passenger, choice, inner_choice);
-            break;
-        case 4:
-            Report(flight, passenger, ticket);
-            break;
-        default:
-            puts("Opcao Invalida");
-            break;
-        }
-    }
-
-    /* Libera a memória alocada antes de encerrar */
+void FreeMemory(FLIGHT_PTR flight, TICKET_PTR ticket, PASSENGER_PTR passenger) {
     {
         FLIGHT_PTR f = flight;
         while (f != NULL) {
@@ -230,14 +197,58 @@ int main(void) {
             p = next;
         }
     }
+}
+
+// main:
+
+int main(void) {
+    FLIGHT_PTR flight = NULL;
+    TICKET_PTR ticket = NULL;
+    PASSENGER_PTR passenger = NULL;
+
+    AddElements(&flight, &ticket, &passenger);
+
+    // Menu:
+    int choice;
+    while ((choice = MainMenu()) != 5) {
+        int inner_choice;
+        switch (choice) {
+        case 1:
+            puts("\n================= Voos =================\n");
+            inner_choice = SubMenu();
+            ExecuteAction(&flight, &ticket, &passenger, choice, inner_choice);
+            break;
+        case 2:
+            puts("\n============== Passagens ===============\n");
+            inner_choice = SubMenu();
+            ExecuteAction(&flight, &ticket, &passenger, choice, inner_choice);
+            break;
+        case 3:
+            puts("\n============= Passageiros ==============\n");
+            inner_choice = SubMenu();
+            ExecuteAction(&flight, &ticket, &passenger, choice, inner_choice);
+            break;
+        case 4:
+            Report(flight, passenger, ticket);
+            break;
+        default:
+            puts("\n============ Opcao Invalida ============\n");
+            break;
+        }
+    }
+
+    FreeMemory(flight, ticket, passenger);
 
     return 0;
 }
 
-/* === Menu Principal === */
+// Menu Principal:
 
 int MainMenu(void) {
     int option;
+    puts("\n========================================");
+    puts("============ Menu Principal ============");
+    puts("========================================\n");
     printf("1 - Voos\n"
            "2 - Passagens\n"
            "3 - Passageiros\n"
@@ -247,7 +258,7 @@ int MainMenu(void) {
     return option;
 }
 
-/* === Submenu CRUD === */
+// Sub-menu CRUD:
 
 int SubMenu(void) {
     int option;
@@ -260,7 +271,7 @@ int SubMenu(void) {
     return option;
 }
 
-/* === Roteador de Ações === */
+// Executa uma das ações do sub-menu
 
 void ExecuteAction(FLIGHT_PTR *flight_ptr, TICKET_PTR *ticket_ptr,
                    PASSENGER_PTR *passenger_ptr, int choice, int inner_choice) {
@@ -280,38 +291,38 @@ void ExecuteAction(FLIGHT_PTR *flight_ptr, TICKET_PTR *ticket_ptr,
     case 5:
         break;
     default:
-        puts("Opcao Invalida");
+        puts("Opcao Invalida!");
         break;
     }
 }
 
-/* === Adicionar === */
+// Adicionar voos, passagens ou passageiros:
 
 void Add(FLIGHT_PTR *flight_ptr, TICKET_PTR *ticket_ptr,
          PASSENGER_PTR *passenger_ptr, int choice) {
     switch (choice) {
     case 1: {
-        /* Adicionar voo */
+        // Adicionar voo:
         if (total_flights >= MAX_FLIGHTS) {
-            puts("Limite maximo de 50 voos ja foi excedido");
+            puts("Limite maximo de 50 voos ja foi excedido!");
             return;
         }
         puts("Adicionando Voos:");
 
         FLIGHT_PTR new_node = malloc(sizeof(FLIGHT));
         if (new_node == NULL) {
-            puts("Erro de alocacao de memoria");
+            puts("Erro de alocacao de memoria!");
             return;
         }
 
         printf("Identificador\n? ");
         scanf(" %d", &new_node->id);
 
-        /* Verifica se o identificador já existe na lista */
+        // Verifica se o identificador de voo já existe na lista:
         FLIGHT_PTR current_ptr = *flight_ptr;
         while (current_ptr != NULL) {
             if (current_ptr->id == new_node->id) {
-                puts("Esse identificador ja foi cadastrado\n");
+                puts("Esse identificador ja foi cadastrado!\n");
                 free(new_node);
                 return;
             }
@@ -332,7 +343,7 @@ void Add(FLIGHT_PTR *flight_ptr, TICKET_PTR *ticket_ptr,
         scanf(" %49[^\n]", new_node->destination);
         new_node->next = NULL;
 
-        /* Insere no final da lista */
+        // Insere no final da lista:
         if (*flight_ptr == NULL) {
             *flight_ptr = new_node;
         } else {
@@ -346,33 +357,33 @@ void Add(FLIGHT_PTR *flight_ptr, TICKET_PTR *ticket_ptr,
         break;
     }
     case 2: {
-        /* Adicionar passagem */
+        // Adicionar passagem:
         if (*flight_ptr == NULL || *passenger_ptr == NULL) {
-            puts("Sem passageiros ou voos para passagens\n");
+            puts("Sem passageiros ou voos para passagens!\n");
             return;
         }
         if (total_tickets >= MAX_TICKETS) {
-            puts("Limite maximo de 100 passagens ja foi excedido");
+            puts("Limite maximo de 100 passagens ja foi excedido!");
             return;
         }
         puts("Adicionando Passagens:");
 
         TICKET_PTR new_node = malloc(sizeof(TICKET));
         if (new_node == NULL) {
-            puts("Erro de alocacao de memoria");
+            puts("Erro de alocacao de memoria!");
             return;
         }
 
         printf("Identificador Passageiro\n? ");
         scanf(" %d", &new_node->passenger_id);
 
-        /* Verifica se o passageiro existe */
+        // Verifica se o passageiro existe:
         PASSENGER_PTR temp_passenger = *passenger_ptr;
         while (temp_passenger != NULL && new_node->passenger_id != temp_passenger->id) {
             temp_passenger = temp_passenger->next;
         }
         if (temp_passenger == NULL) {
-            puts("Esse identificador nao existe\n");
+            puts("Esse identificador nao existe!\n");
             free(new_node);
             return;
         }
@@ -380,13 +391,13 @@ void Add(FLIGHT_PTR *flight_ptr, TICKET_PTR *ticket_ptr,
         printf("Identificador Voo\n? ");
         scanf(" %d", &new_node->flight_id);
 
-        /* Verifica se o voo existe */
+        // Verifica se o voo existe:
         FLIGHT_PTR temp_flight = *flight_ptr;
         while (temp_flight != NULL && new_node->flight_id != temp_flight->id) {
             temp_flight = temp_flight->next;
         }
         if (temp_flight == NULL) {
-            puts("Esse identificador nao existe\n");
+            puts("Esse identificador nao existe!\n");
             free(new_node);
             return;
         }
@@ -397,12 +408,12 @@ void Add(FLIGHT_PTR *flight_ptr, TICKET_PTR *ticket_ptr,
         scanf(" %14[^\n]", new_node->sale_date);
         new_node->next = NULL;
 
-        /* Insere no final e atribui número sequencial (máximo atual + 1) */
+        // Insere no final e atribui número sequencial (máximo atual + 1):
         if (*ticket_ptr == NULL) {
             *ticket_ptr = new_node;
             new_node->number = 1;
         } else {
-            /* Encontra o maior número existente */
+            // Encontra o maior número existente:
             int max_number = 0;
             TICKET_PTR current = *ticket_ptr;
             while (current != NULL) {
@@ -411,7 +422,7 @@ void Add(FLIGHT_PTR *flight_ptr, TICKET_PTR *ticket_ptr,
                 }
                 current = current->next;
             }
-            /* Encontra o último nó para encadear */
+            // Encontra o último nó para encadear:
             current = *ticket_ptr;
             while (current->next != NULL) {
                 current = current->next;
@@ -423,23 +434,23 @@ void Add(FLIGHT_PTR *flight_ptr, TICKET_PTR *ticket_ptr,
         break;
     }
     case 3: {
-        /* Adicionar passageiro */
+        // Adicionar passageiro:
         if (total_passengers >= MAX_PASSENGERS) {
-            puts("Limite maximo de 100 passageiros ja foi excedido");
+            puts("Limite maximo de 100 passageiros ja foi excedido!");
             return;
         }
         puts("Adicionando Passageiros:");
 
         PASSENGER_PTR new_node = malloc(sizeof(PASSENGER));
         if (new_node == NULL) {
-            puts("Erro de alocacao de memoria");
+            puts("Erro de alocacao de memoria!");
             return;
         }
 
         printf("Identificador\n? ");
         scanf(" %d", &new_node->id);
 
-        /* Verifica se o identificador já existe */
+        // Verifica se o identificador do passageiro já existe?
         PASSENGER_PTR current_ptr = *passenger_ptr;
         while (current_ptr != NULL && current_ptr->id != new_node->id) {
             current_ptr = current_ptr->next;
@@ -462,7 +473,7 @@ void Add(FLIGHT_PTR *flight_ptr, TICKET_PTR *ticket_ptr,
         scanf(" %c", &new_node->gender);
         new_node->next = NULL;
 
-        /* Insere no final da lista */
+        // Insere no final da lista:
         if (*passenger_ptr == NULL) {
             *passenger_ptr = new_node;
         } else {
@@ -478,15 +489,15 @@ void Add(FLIGHT_PTR *flight_ptr, TICKET_PTR *ticket_ptr,
     }
 }
 
-/* === Alterar === */
+// Alterar:
 
 void Update(FLIGHT_PTR *flight_ptr, TICKET_PTR *ticket_ptr,
             PASSENGER_PTR *passenger_ptr, int choice) {
     switch (choice) {
     case 1: {
-        /* Alterar voo */
+        // Alterar voo:
         if (*flight_ptr == NULL) {
-            puts("Nao existem voos no sistema");
+            puts("Nao existem voos no sistema!");
             return;
         }
         puts("Alterando Voos:");
@@ -500,7 +511,7 @@ void Update(FLIGHT_PTR *flight_ptr, TICKET_PTR *ticket_ptr,
         }
 
         if (current_ptr == NULL) {
-            puts("Voo nao encontrado");
+            puts("Voo nao encontrado!");
         } else {
             printf("Numero da Aeronave (atual: %d)\n? ", current_ptr->aircraft_number);
             scanf(" %d", &current_ptr->aircraft_number);
@@ -519,9 +530,9 @@ void Update(FLIGHT_PTR *flight_ptr, TICKET_PTR *ticket_ptr,
         break;
     }
     case 2: {
-        /* Alterar passagem */
+        // Alterar passagem:
         if (*ticket_ptr == NULL) {
-            puts("Nao existem passagens no sistema");
+            puts("Nao existem passagens no sistema!");
             return;
         }
         puts("Alterando Passagens:");
@@ -535,7 +546,7 @@ void Update(FLIGHT_PTR *flight_ptr, TICKET_PTR *ticket_ptr,
         }
 
         if (current_ptr == NULL) {
-            puts("Passagem nao encontrada");
+            puts("Passagem nao encontrada!");
         } else {
             printf("Identificador do Passageiro (atual: %d)\n? ",
                    current_ptr->passenger_id);
@@ -552,9 +563,9 @@ void Update(FLIGHT_PTR *flight_ptr, TICKET_PTR *ticket_ptr,
         break;
     }
     case 3: {
-        /* Alterar passageiro */
+        // Alterar passageiro
         if (*passenger_ptr == NULL) {
-            puts("Nao existem passageiros no sistema");
+            puts("Nao existem passageiros no sistema!");
             return;
         }
         puts("Alterando Passageiros:");
@@ -568,7 +579,7 @@ void Update(FLIGHT_PTR *flight_ptr, TICKET_PTR *ticket_ptr,
         }
 
         if (current_ptr == NULL) {
-            puts("Passageiro nao encontrado");
+            puts("Passageiro nao encontrado!");
         } else {
             printf("Nome (atual: %s)\n? ", current_ptr->name);
             scanf(" %29[^\n]", current_ptr->name);
@@ -580,22 +591,22 @@ void Update(FLIGHT_PTR *flight_ptr, TICKET_PTR *ticket_ptr,
             scanf(" %19[^\n]", current_ptr->phone);
             printf("Sexo (atual: %c)\n? ", current_ptr->gender);
             scanf(" %c", &current_ptr->gender);
-            puts("Passageiro alterado com sucesso");
+            puts("Passageiro alterado com sucesso!");
         }
         break;
     }
     }
 }
 
-/* === Consultar === */
+// Consultar:
 
 void View(const FLIGHT_PTR *flight_ptr, const TICKET_PTR *ticket_ptr,
           const PASSENGER_PTR *passenger_ptr, int choice) {
     switch (choice) {
     case 1: {
-        /* Consultar voos */
+        // Consultar voos:
         if (*flight_ptr == NULL) {
-            puts("Nao existem voos no sistema");
+            puts("Nao existem voos no sistema!");
             return;
         }
         puts("Consultando Voos:");
@@ -611,7 +622,7 @@ void View(const FLIGHT_PTR *flight_ptr, const TICKET_PTR *ticket_ptr,
             printf("Origem:                     %s\n", current_ptr->origin);
             printf("Destino:                    %s\n", current_ptr->destination);
 
-            /* Calcula passageiros deste voo dinamicamente via passagens */
+            // Calcula passageiros deste voo dinamicamente via passagens:
             int passengers_in_flight = 0;
             TICKET_PTR current_ticket = *ticket_ptr;
             while (current_ticket != NULL) {
@@ -628,9 +639,9 @@ void View(const FLIGHT_PTR *flight_ptr, const TICKET_PTR *ticket_ptr,
         break;
     }
     case 2: {
-        /* Consultar passagens */
+        // Consultar passagens:
         if (*ticket_ptr == NULL) {
-            puts("Nao existem passagens no sistema");
+            puts("Nao existem passagens no sistema!");
             return;
         }
         puts("Consultando Passagens");
@@ -646,9 +657,9 @@ void View(const FLIGHT_PTR *flight_ptr, const TICKET_PTR *ticket_ptr,
         break;
     }
     case 3: {
-        /* Consultar passageiros */
+        // Consultar passageiros:
         if (*passenger_ptr == NULL) {
-            puts("Nao existem passageiros no sistema");
+            puts("Nao existem passageiros no sistema!");
             return;
         }
         puts("Consultando Passageiros:");
@@ -670,19 +681,16 @@ void View(const FLIGHT_PTR *flight_ptr, const TICKET_PTR *ticket_ptr,
     }
 }
 
-/* === Remover === */
+// Remover:
 
 void Delete(FLIGHT_PTR *flight_ptr, TICKET_PTR *ticket_ptr,
             PASSENGER_PTR *passenger_ptr, int choice) {
 
     switch (choice) {
     case 1: {
-        /*
-         * Remove um voo e, em cascata, todas as passagens e passageiros
-         * associados àquele voo.
-         */
+        // Remove um voo (e, em cascata, todas as passagens e passageiros associados àquele voo):
         if (*flight_ptr == NULL) {
-            puts("Nao existem voos no sistema");
+            puts("Nao existem voos no sistema!");
             return;
         }
         int id;
@@ -697,16 +705,16 @@ void Delete(FLIGHT_PTR *flight_ptr, TICKET_PTR *ticket_ptr,
         }
 
         if (current_ptr == NULL) {
-            puts("Voo nao encontrado");
+            puts("Voo nao encontrado!");
             return;
         }
 
-        /* Remove passagens e passageiros associados ao voo */
+        // Remove passagens e passageiros associados ao voo:
         TICKET_PTR current_ticket = *ticket_ptr, ticket_prev = NULL;
         while (current_ticket != NULL) {
             if (current_ticket->flight_id == id) {
 
-                /* Remove o passageiro vinculado a esta passagem */
+                // Remove o passageiro vinculado a esta passagem:
                 PASSENGER_PTR current_passenger = *passenger_ptr;
                 PASSENGER_PTR passenger_prev = NULL;
                 while (current_passenger != NULL) {
@@ -724,7 +732,7 @@ void Delete(FLIGHT_PTR *flight_ptr, TICKET_PTR *ticket_ptr,
                     current_passenger = current_passenger->next;
                 }
 
-                /* Remove a passagem */
+                // Remove a passagem:
                 TICKET_PTR ticket_to_remove = current_ticket;
                 current_ticket = current_ticket->next;
 
@@ -741,7 +749,7 @@ void Delete(FLIGHT_PTR *flight_ptr, TICKET_PTR *ticket_ptr,
             }
         }
 
-        /* Remove o voo da lista */
+        // Remove o voo da lista:
         if (prev_ptr == NULL) {
             *flight_ptr = current_ptr->next;
         } else {
@@ -750,13 +758,13 @@ void Delete(FLIGHT_PTR *flight_ptr, TICKET_PTR *ticket_ptr,
         free(current_ptr);
         total_flights--;
 
-        puts("Voo, passagens e passageiros associados removidos com sucesso");
+        puts("Voo, passagens e passageiros associados removidos com sucesso!");
         break;
     }
     case 2: {
-        /* Remove apenas uma passagem */
+        // Remove apenas uma passagem:
         if (*ticket_ptr == NULL) {
-            puts("Nao existem passagens no sistema");
+            puts("Nao existem passagens no sistema!");
             return;
         }
         int number;
@@ -771,7 +779,7 @@ void Delete(FLIGHT_PTR *flight_ptr, TICKET_PTR *ticket_ptr,
         }
 
         if (current_ptr == NULL) {
-            puts("Passagem nao encontrada");
+            puts("Passagem nao encontrada!");
             return;
         }
 
@@ -782,15 +790,13 @@ void Delete(FLIGHT_PTR *flight_ptr, TICKET_PTR *ticket_ptr,
         }
         free(current_ptr);
         total_tickets--;
-        puts("Passagem removida com sucesso");
+        puts("Passagem removida com sucesso!");
         break;
     }
     case 3: {
-        /*
-         * Remove um passageiro e todas as suas passagens associadas.
-         */
+        // Remove um passageiro (e todas as suas passagens associadas):
         if (*passenger_ptr == NULL) {
-            puts("Nao existem passageiros no sistema");
+            puts("Nao existem passageiros no sistema!");
             return;
         }
         int id;
@@ -805,11 +811,11 @@ void Delete(FLIGHT_PTR *flight_ptr, TICKET_PTR *ticket_ptr,
         }
 
         if (current_ptr == NULL) {
-            puts("Passageiro nao encontrado");
+            puts("Passageiro nao encontrado!");
             return;
         }
 
-        /* Remove passagens associadas ao passageiro */
+        // Remove passagens associadas ao passageiro:
         TICKET_PTR current_ticket = *ticket_ptr, ticket_prev = NULL;
         while (current_ticket != NULL) {
             if (current_ticket->passenger_id == id) {
@@ -829,7 +835,7 @@ void Delete(FLIGHT_PTR *flight_ptr, TICKET_PTR *ticket_ptr,
             }
         }
 
-        /* Remove o passageiro */
+        // Remove o passageiro:
         if (prev_ptr == NULL) {
             *passenger_ptr = current_ptr->next;
         } else {
@@ -838,22 +844,21 @@ void Delete(FLIGHT_PTR *flight_ptr, TICKET_PTR *ticket_ptr,
         free(current_ptr);
         total_passengers--;
 
-        puts("Passageiro e suas passagens removidos com sucesso");
+        puts("Passageiro e suas passagens removidos com sucesso!");
         break;
     }
     default:
-        puts("Opcao invalida");
+        puts("Opcao Invalida!");
         break;
     }
 }
 
-/* === Relatórios === */
+// Relatórios:
 
-void Report(FLIGHT_PTR flight_ptr, PASSENGER_PTR passenger_ptr,
-            TICKET_PTR ticket_ptr) {
-    printf("\n--- Relatorio ---\n");
+void Report(FLIGHT_PTR flight_ptr, PASSENGER_PTR passenger_ptr, TICKET_PTR ticket_ptr) {
+    puts("\n============== Relatorio =============\n");
 
-    /* Quantidade de passagens por voo */
+    // Quantidade de passagens por voo:
     printf("Quantidade de passagens por voo:\n");
     FLIGHT_PTR current_flight = flight_ptr;
     while (current_flight != NULL) {
@@ -870,7 +875,7 @@ void Report(FLIGHT_PTR flight_ptr, PASSENGER_PTR passenger_ptr,
         current_flight = current_flight->next;
     }
 
-    /* Quantidade de voos por empresa (agrupado, sem repetições) */
+    // Quantidade de voos por empresa (agrupado, sem repetições):
     printf("\nQuantidade de voos por empresa:\n");
     {
         char printed_airlines[50][20];
@@ -907,7 +912,7 @@ void Report(FLIGHT_PTR flight_ptr, PASSENGER_PTR passenger_ptr,
         }
     }
 
-    /* Lista de passageiros por voo */
+    // Lista de passageiros por voo:
     printf("\nLista de passageiros por voo:\n");
     current_flight = flight_ptr;
     while (current_flight != NULL) {
@@ -928,5 +933,4 @@ void Report(FLIGHT_PTR flight_ptr, PASSENGER_PTR passenger_ptr,
         }
         current_flight = current_flight->next;
     }
-    printf("-----------------\n");
 }
