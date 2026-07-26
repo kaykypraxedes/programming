@@ -35,9 +35,9 @@ A B-Tree is a balanced data structure where each node can store **multiple keys*
 | `RIGHT_SIBLING` | `0` | Indicates operation with the right sibling |
 | `MAX_DEPTH` | `100` | Safety limit against infinite recursion |
 
-**Class `bNode`:** `leaf` (bool, whether it is a leaf), `keys` (stored keys), `children` (references to children).
+**Class `BNode`:** `leaf` (bool, whether it is a leaf), `keys` (stored keys), `children` (references to children).
 
-**Class `bTree`:** `root` (root node), `t` (minimum degree).
+**Class `BTree`:** `root` (root node), `t` (minimum degree).
 
 ---
 
@@ -45,34 +45,34 @@ A B-Tree is a balanced data structure where each node can store **multiple keys*
 
 ### Insertion
 
-Insertion (`insert(k)`) navigates to the appropriate leaf via `goLeaf`. If the leaf has space (`len(keys) < 2t - 1`), it inserts `k` while maintaining order. If it is full, it splits the node and retries.
+Insertion (`Insert(k)`) navigates to the appropriate leaf via `GoLeaf`. If the leaf has space (`len(keys) < 2t - 1`), it inserts `k` while maintaining order. If it is full, it splits the node and retries.
 
-`split(node)` divides a full node into two siblings, promoting the median key to the parent — creating a new root if necessary, and cascading recursively if the parent is also full.
+`Split(node)` divides a full node into two siblings, promoting the median key to the parent — creating a new root if necessary, and cascading recursively if the parent is also full.
 
 ### Deletion
 
-Deletion (`remove(k)`) covers all classic cases:
+Deletion (`Remove(k)`) covers all classic cases:
 
 **Leaf deletion:**
 1. **1a** — leaf above minimum: remove directly
-2. **1b** — leaf at minimum, but a sibling has extra keys: borrow via `passKey`
-3. **1c** — leaf and siblings at minimum: merge via `merge`, then try to remove again
+2. **1b** — leaf at minimum, but a sibling has extra keys: borrow via `PassKey`
+3. **1c** — leaf and siblings at minimum: merge via `Merge`, then try to remove again
 
 **Internal node deletion:**
 1. **2a** — some child has more than minimum: replace with predecessor/successor key
-2. **2b** — both children at minimum: merge the two children via `merge`
+2. **2b** — both children at minimum: merge the two children via `Merge`
 
-`merge(node, sibling, parent, index, pm)` merges two sibling nodes when both are at minimum keys; if the parent also runs out of extra keys, the merge may cascade up to the grandparent. `passKey` does the reverse: transfers a key from parent to the node, compensating with a key from the sibling. `findParent` locates the parent of a node recursively.
+`Merge(node, sibling, parent, index, pm)` merges two sibling nodes when both are at minimum keys; if the parent also runs out of extra keys, the merge may cascade up to the grandparent. `PassKey` does the reverse: transfers a key from parent to the node, compensating with a key from the sibling. `FindParent` locates the parent of a node recursively.
 
 ### Search
 
-`search(k, node)` recursively descends through the tree: returns the node if `k` is found in it, `None` if it reaches a leaf without finding it, or descends to the appropriate child.
+`Search(k, node)` recursively descends through the tree: returns the node if `k` is found in it, `None` if it reaches a leaf without finding it, or descends to the appropriate child.
 
 ---
 
 ## Safety Against Infinite Loops
 
-All recursive functions (`goLeaf`, `findParent`, `split`, `insert`, `search`, `merge`, `remove`) have the `_call_depth` parameter, incremented on each call. If `MAX_DEPTH` (100) is exceeded, a `RecursionError` is raised, preventing infinite loops caused by bugs in the reorganization logic.
+All recursive functions (`GoLeaf`, `FindParent`, `Split`, `Insert`, `Search`, `Merge`, `Remove`) have the `_call_depth` parameter, incremented on each call. If `MAX_DEPTH` (100) is exceeded, a `RecursionError` is raised, preventing infinite loops caused by bugs in the reorganization logic.
 
 ---
 
@@ -89,7 +89,7 @@ The `main()` function runs a battery of manual tests:
 ## Usage
 
 ```python
-btree = bTree(2)  # minimum degree = 2
+btree = BTree(2)  # minimum degree = 2
 ```
 
 With `t = 2`, each node can have between 1 and 3 keys, and each non-leaf node has between 2 and 4 children.
