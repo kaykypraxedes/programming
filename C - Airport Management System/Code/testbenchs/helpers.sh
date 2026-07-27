@@ -1,7 +1,7 @@
 # helpers.sh — funções compartilhadas pelos testbenchs
 # Uso: . "$(dirname "$0")/helpers.sh"
 
-AEROPORTO="$(dirname "$0")/../airport_manager"
+AEROPORTO="$(dirname "$0")/../build/AirportManager"
 RESULT=""
 
 set_input() {

@@ -3,7 +3,7 @@ import os
 from PIL import Image
 from pypdf import PdfReader
 
-from pdfEditor import (
+from PdfEditor import (
     LARGURA_A4_PT,
     CalculateWidth,
     DefineAvailableName,

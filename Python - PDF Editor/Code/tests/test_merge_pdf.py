@@ -2,7 +2,7 @@ from pathlib import Path
 
 from pypdf import PdfReader
 
-from pdfEditor import MergePdf
+from PdfEditor import MergePdf
 
 
 class TestMergePdf:

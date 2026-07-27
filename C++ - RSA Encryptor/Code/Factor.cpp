@@ -1,5 +1,5 @@
-/* fatora.cpp */
-#include "headers/Fatora.h"
+/* Factor.cpp */
+#include "headers/Factor.h"
 // Elementos privados
 static std::vector<FATOR> fatores{};
 // Elementos públicos

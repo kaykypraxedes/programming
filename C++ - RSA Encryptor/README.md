@@ -19,10 +19,10 @@ Educational implementation of the RSA algorithm in C++, with utilities for prime
 ```
 Code/
 ├── Main.cpp           # Main interface (interactive menu)
-├── Cripto.cpp/.h      # RSA implementation
-├── Fatora.cpp/.h      # Prime factor decomposition
-├── Primos.cpp/.h      # Prime generation (Sieve of Eratosthenes)
-└── Rempo.cpp/.h       # Time formatting (us → ms → s → min)
+├── Crypto.cpp/.h      # RSA implementation
+├── Factor.cpp/.h      # Prime factor decomposition
+├── Primes.cpp/.h      # Prime generation (Sieve of Eratosthenes)
+└── Time.cpp/.h        # Time formatting (us → ms → s → min)
 ```
 
 ---

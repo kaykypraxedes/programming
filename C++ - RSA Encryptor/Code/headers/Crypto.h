@@ -1,6 +1,6 @@
-/* Cripto.h */
-#ifndef CRIPTO_H
-#define CRIPTO_H
+/* Crypto.h */
+#ifndef CRYPTO_H
+#define CRYPTO_H
 #include <string>
 #include <vector>
 bool testaChaves(unsigned long long int &, unsigned long long int &, unsigned long long int &);

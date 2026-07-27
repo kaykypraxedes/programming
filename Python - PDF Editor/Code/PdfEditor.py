@@ -1,4 +1,4 @@
-# pdfEditor.py
+# PdfEditor.py
 # Desenvolvedor:
 #     Kayky Moreira Praxedes
 

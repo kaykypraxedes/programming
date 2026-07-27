@@ -41,6 +41,14 @@ Uma B-Tree é uma estrutura de dados balanceada onde cada nó pode armazenar **m
 
 ---
 
+## Uso
+
+```bash
+cd Code && python BTree.py
+```
+
+---
+
 ## Módulos
 
 ### Inserção

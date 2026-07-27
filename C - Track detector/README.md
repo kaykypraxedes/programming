@@ -33,7 +33,7 @@ Line follower systems use optical sensors that return reflectance values: **0** 
 ```
 Code/
 ├── Makefile                # Compilation and test execution
-├── detectarPista.c         # Main program
+├── TrackDetector.c         # Main program
 └── test-cases/
     ├── test-case_1.txt     # Straight lane
     ├── test-case_2.txt     # Straight lane
@@ -117,7 +117,7 @@ This project was developed under specific academic guidelines. Some design choic
 
 ## Tests
 
-Six test cases located in `Code/casos-teste/`. Each contains 15 sensor rows with 950 values per row (values 0, 128, 255).
+Six test cases located in `Code/test-cases/`. Each contains 15 sensor rows with 950 values per row (values 0, 128, 255).
 
 1. **test-case_1** — Symmetric straight lane, no obstacle
 2. **test-case_2** — Straight lane with slight lateral shift, no obstacle
@@ -142,8 +142,8 @@ make test-case_3    # runs only case 3
 Manual execution with a specific test case:
 
 ```bash
-gcc -o detectarPista detectarPista.c
-./detectarPista < casos-teste/test-case_3.txt
+cd Code && gcc -o build/TrackDetector TrackDetector.c
+./build/TrackDetector < test-cases/test-case_3.txt
 ```
 
 Input format:

@@ -2,7 +2,7 @@ from pathlib import Path
 
 from pypdf import PdfReader
 
-from pdfEditor import ExtractPdf
+from PdfEditor import ExtractPdf
 
 
 class TestExtractPdf:

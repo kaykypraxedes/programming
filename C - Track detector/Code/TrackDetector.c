@@ -1,4 +1,4 @@
-/* detectarPista.c */
+/* TrackDetector.c */
 /*
 Desenvolvedores:
     Kayky Moreira Praxedes

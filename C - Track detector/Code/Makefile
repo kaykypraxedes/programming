@@ -1,7 +1,7 @@
 CC = gcc
 CFLAGS = -Wall -Wextra -std=c99 -pedantic-errors
-TARGET = detectarPista
-SRC = detectarPista.c
+TARGET = build/TrackDetector
+SRC = TrackDetector.c
 CASOS = test-cases
 
 TEST_FILES = $(wildcard $(CASOS)/test-case_*.txt)
@@ -16,6 +16,7 @@ all: $(TARGET)
 	done
 
 $(TARGET): $(SRC)
+	@mkdir -p build
 	$(CC) $(CFLAGS) -o $@ $^
 
 test-case_%: $(TARGET) $(CASOS)/test-case_%.txt
@@ -23,4 +24,4 @@ test-case_%: $(TARGET) $(CASOS)/test-case_%.txt
 	./$(TARGET) < $(CASOS)/$@.txt
 
 clean:
-	rm -f $(TARGET)
+	rm -rf build

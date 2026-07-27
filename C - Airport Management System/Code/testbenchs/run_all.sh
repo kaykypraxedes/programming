@@ -3,8 +3,8 @@
 
 cd "$(dirname "$0")/.." || exit 1
 
-if [ ! -f airport_manager ]; then
-    echo "ERRO: binario 'airport_manager' nao encontrado. Execute 'make' primeiro."
+if [ ! -f build/AirportManager ]; then
+    echo "ERRO: binario 'build/AirportManager' nao encontrado. Execute 'make' primeiro."
     exit 1
 fi
 

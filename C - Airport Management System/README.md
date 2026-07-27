@@ -55,7 +55,7 @@ The system uses **singly linked lists** with dynamic allocation for three entiti
 cd Code && make                    # compile the program
 cd Code && make test               # run automated tests (12 testbenchs)
 cd Code && make clean              # remove build artifacts
-cd Code && ./airport_manager       # run the program
+cd Code && ./build/AirportManager  # run the program
 ```
 
 ### Automated Tests

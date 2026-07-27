@@ -33,7 +33,7 @@ Sistemas seguidores de linha (line followers) usam sensores ópticos que retorna
 ```
 Code/
 ├── Makefile                # Compilação e execução dos testes
-├── detectarPista.c         # Programa principal
+├── TrackDetector.c         # Programa principal
 └── test-cases/
     ├── test-case_1.txt     # Pista em linha reta
     ├── test-case_2.txt     # Pista em linha reta
@@ -117,7 +117,7 @@ Este projeto foi desenvolvido sob diretrizes acadêmicas específicas. Algumas e
 
 ## Testes
 
-Seis casos de teste localizados em `Code/casos-teste/`. Cada um contém 15 linhas de sensor com 950 valores por linha (valores 0, 128, 255).
+Seis casos de teste localizados em `Code/test-cases/`. Cada um contém 15 linhas de sensor com 950 valores por linha (valores 0, 128, 255).
 
 1. **test-case_1** — Pista em linha reta simétrica, sem impedimento
 2. **test-case_2** — Pista em linha reta com leve deslocamento lateral, sem impedimento
@@ -142,8 +142,8 @@ make test-case_3    # executa apenas o caso 3
 Execução manual com um caso específico:
 
 ```bash
-gcc -o detectarPista detectarPista.c
-./detectarPista < casos-teste/test-case_3.txt
+cd Code && gcc -o build/TrackDetector TrackDetector.c
+./build/TrackDetector < test-cases/test-case_3.txt
 ```
 
 Formato da entrada:

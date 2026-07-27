@@ -1,6 +1,6 @@
-/* Tempo.h */
-#ifndef TEMPO_H
-#define TEMPO_H
+/* Time.h */
+#ifndef TIME_H
+#define TIME_H
 #include <string>
 #include <chrono>
 // Simplificação de nome para facilitar operações de conversão

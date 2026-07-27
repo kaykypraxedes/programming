@@ -55,7 +55,7 @@ O sistema utiliza **listas encadeadas simples** com alocação dinâmica para tr
 cd Code && make                    # compilar o programa
 cd Code && make test               # executar testes automatizados (12 testbenchs)
 cd Code && make clean              # remover artefatos de compilação
-cd Code && ./airport_manager       # executar o programa
+cd Code && ./build/AirportManager  # executar o programa
 ```
 
 ### Testes Automatizados

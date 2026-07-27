@@ -1,9 +1,9 @@
-/* Primos.h */
-#ifndef PRIMOS_H
-#define PRIMOS_H
+/* Primes.h */
+#ifndef PRIMES_H
+#define PRIMES_H
 #include <vector>
 #include <cmath>
-#include "Tempo.h"
+#include "Time.h"
 // Outros métodos tem de ter acesso à lista de primos
 std::vector<unsigned long long int> getPrimos();
 // Modifica o vetor primos e retorna o tempo que demorou

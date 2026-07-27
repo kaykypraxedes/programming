@@ -74,18 +74,18 @@ pytest
   # Debian/Ubuntu
   sudo apt install zenity
   ```
-- **Conda** — o script `pdfEditor.sh` espera uma instalação do Anaconda em `/opt/anaconda3/` e ativa o ambiente base automaticamente.
+- **Conda** — o script `PdfEditor.sh` espera uma instalação do Anaconda em `/opt/anaconda3/` e ativa o ambiente base automaticamente.
 
 ### Executar
 
 **Terminal (diretamente):**
 ```bash
-python pdfEditor.py
+python PdfEditor.py
 ```
 
 **GUI (via script com diálogos de arquivo):**
 ```bash
-bash pdfEditor.sh
+bash PdfEditor.sh
 ```
 
 ### Exemplos de uso
